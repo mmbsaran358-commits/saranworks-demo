@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>さらんworks 体験デモ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Roboto+Mono:wght@400;500;700&display=swap">
+<style>
+:root{
+  color-scheme: light;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+
+  --paper:#FBFAF5;
+  --card:#FFFFFF;
+  --grid:#E4E8DF;
+  --line:#D5DBD0;
+  --ink:#1A2A22;
+  --ink-2:#5C675E;
+  --ink-3:#8A948B;
+  --green:#1D6B4F;
+  --green-ink:#15543E;
+  --green-soft:#E8F1EB;
+  --seal:#B4402C;
+  --amber:#8A6A1F;
+  --amber-soft:#F6EFDC;
+  --on-green:#FFFFFF;
+
+  --f-display:'Zen Old Mincho', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+  --f-body:'Zen Kaku Gothic New', 'Hiragino Sans', 'Yu Gothic', sans-serif;
+  --f-num:'Roboto Mono', ui-monospace, 'SFMono-Regular', monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --paper:#101714;
+    --card:#16201B;
+    --grid:#1D2922;
+    --line:#2B382F;
+    --ink:#E9EEE8;
+    --ink-2:#A6B1A8;
+    --ink-3:#7C877E;
+    --green:#5FC08E;
+    --green-ink:#8BD6AC;
+    --green-soft:#17281F;
+    --seal:#E3785F;
+    --amber:#D6B168;
+    --amber-soft:#26200F;
+    --on-green:#0E1613;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --paper:#101714;
+  --card:#16201B;
+  --grid:#1D2922;
+  --line:#2B382F;
+  --ink:#E9EEE8;
+  --ink-2:#A6B1A8;
+  --ink-3:#7C877E;
+  --green:#5FC08E;
+  --green-ink:#8BD6AC;
+  --green-soft:#17281F;
+  --seal:#E3785F;
+  --amber:#D6B168;
+  --amber-soft:#26200F;
+  --on-green:#0E1613;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  padding-block:0 56px;
+  padding-inline:16px;
+  background-color:var(--paper);
+  background-image:
+    repeating-linear-gradient(to right, var(--grid) 0 1px, transparent 1px 28px),
+    repeating-linear-gradient(to bottom, var(--grid) 0 1px, transparent 1px 28px);
+  color:var(--ink);
+  font-family:var(--f-body);
+  font-size:16px;
+  line-height:1.75;
+}
+.wrap{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+
+h1,h2,h3{font-family:var(--f-display);font-weight:700;text-wrap:balance;margin:0;line-height:1.35}
+p{margin:0}
+.eyebrow{
+  font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:700;
+}
+
+/* ヘッダー */
+header{
+  position:sticky;top:env(safe-area-inset-top, 0px);z-index:20;
+  margin-inline:-16px;padding:10px 16px;
+  background-color:var(--paper);
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+}
+.brand{display:flex;align-items:baseline;gap:8px;margin-right:auto}
+.brand b{font-family:var(--f-display);font-size:19px;letter-spacing:.02em}
+.brand span{font-size:11px;color:var(--ink-3);letter-spacing:.08em}
+.switch{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--card)}
+.switch button{
+  font-family:var(--f-body);font-size:12px;font-weight:700;letter-spacing:.06em;
+  padding:6px 13px;border:0;background:transparent;color:var(--ink-2);cursor:pointer;
+}
+.switch button[aria-pressed="true"]{background:var(--green);color:var(--on-green)}
+
+/* ヒーロー */
+.hero{padding-top:26px;display:flex;flex-direction:column;gap:14px}
+.hero h1{font-size:clamp(27px,7.4vw,42px);letter-spacing:.01em}
+.hero .lead{color:var(--ink-2);max-width:34em}
+.try{
+  display:inline-flex;align-items:center;gap:9px;align-self:flex-start;
+  background:var(--green-soft);color:var(--green-ink);
+  border:1px solid var(--green);border-radius:4px;
+  padding:9px 14px;font-size:14px;font-weight:700;
+}
+.try .dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex:none}
+
+/* カード */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:3px;
+  padding:20px 18px;display:flex;flex-direction:column;gap:16px;
+  box-shadow:0 1px 0 var(--line);
+}
+.card > header{position:static;margin:0;padding:0;background:none;border:0;display:block}
+.card h2{font-size:21px}
+.card .sub{color:var(--ink-2);font-size:14px;margin-top:6px}
+
+/* 今 → これから */
+.shift{display:grid;grid-template-columns:1fr;gap:8px;margin-top:14px}
+.shift div{
+  display:flex;gap:10px;align-items:flex-start;font-size:13.5px;line-height:1.6;
+  padding:9px 11px;border-radius:3px;
+}
+.shift .now{background:var(--amber-soft);color:var(--amber)}
+.shift .next{background:var(--green-soft);color:var(--green-ink)}
+.shift b{flex:none;font-weight:700;font-family:var(--f-display)}
+@media (min-width:560px){.shift{grid-template-columns:1fr 1fr}}
+
+/* 入力 */
+.fields{display:grid;grid-template-columns:1fr;gap:14px}
+@media (min-width:520px){.fields.two{grid-template-columns:1fr 1fr}}
+label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:700;color:var(--ink-2)}
+input[type="number"],input[type="date"],input[type="text"],select{
+  font-family:var(--f-num);font-size:17px;font-weight:500;
+  padding:11px 12px;border:1px solid var(--line);border-radius:3px;
+  background:var(--paper);color:var(--ink);width:100%;
+}
+select{font-family:var(--f-body);font-size:15px;font-weight:500}
+input[type="range"]{width:100%;accent-color:var(--green);height:30px}
+.range-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.range-head output{font-family:var(--f-num);font-size:18px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+
+/* 計算結果 */
+.slip{border-top:2px solid var(--ink);padding-top:12px;display:flex;flex-direction:column;gap:2px}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:5px 0;font-size:14px}
+.row + .row{border-top:1px dotted var(--line)}
+.row .lbl{color:var(--ink-2)}
+.row .val{font-family:var(--f-num);font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
+.row.total{border-top:2px solid var(--ink);margin-top:8px;padding-top:12px}
+.row.total .lbl{font-family:var(--f-display);font-weight:700;font-size:16px;color:var(--ink)}
+.row.total .val{font-size:26px;font-weight:700;color:var(--green-ink)}
+.note{font-size:12.5px;color:var(--ink-3);line-height:1.6}
+
+button.act{
+  font-family:var(--f-body);font-size:15px;font-weight:700;
+  background:var(--green);color:var(--on-green);border:0;border-radius:3px;
+  padding:13px 18px;cursor:pointer;align-self:flex-start;
+}
+button.act:hover{background:var(--green-ink)}
+button.ghost{
+  font-family:var(--f-body);font-size:13px;font-weight:700;
+  background:transparent;color:var(--ink-2);border:1px solid var(--line);
+  border-radius:3px;padding:8px 13px;cursor:pointer;align-self:flex-start;
+}
+:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+
+/* 受付完了 */
+.receipt{border:1px dashed var(--green);background:var(--green-soft);border-radius:3px;padding:14px;display:none;flex-direction:column;gap:9px}
+.receipt.on{display:flex}
+.receipt .no{font-family:var(--f-num);font-size:19px;font-weight:700;color:var(--green-ink);font-variant-numeric:tabular-nums}
+.mail{background:var(--card);border:1px solid var(--line);border-radius:3px;padding:12px;font-size:13px;color:var(--ink-2);white-space:pre-wrap;line-height:1.8}
+
+/* 履歴 */
+ul.log{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0}
+ul.log li{display:flex;justify-content:space-between;gap:12px;align-items:baseline;padding:10px 0;font-size:14px;border-bottom:1px dotted var(--line)}
+ul.log li .what{display:flex;flex-direction:column;gap:2px;min-width:0}
+ul.log li .what b{font-weight:700;font-size:14px}
+ul.log li .what span{font-size:12px;color:var(--ink-3)}
+ul.log li .amt{font-family:var(--f-num);font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tag{
+  display:inline-block;font-size:10px;font-weight:700;letter-spacing:.08em;
+  padding:1px 6px;border-radius:2px;background:var(--amber-soft);color:var(--amber);vertical-align:middle;
+}
+
+/* できること */
+.menu{display:grid;grid-template-columns:1fr;gap:0}
+.menu div{display:flex;gap:12px;padding:12px 0;border-bottom:1px dotted var(--line);align-items:flex-start}
+.menu div:last-child{border-bottom:0}
+.menu .k{font-family:var(--f-display);font-weight:700;font-size:14.5px;flex:none;width:104px;color:var(--green-ink)}
+.menu .v{font-size:14px;color:var(--ink-2);line-height:1.65}
+@media (max-width:460px){.menu div{flex-direction:column;gap:3px}.menu .k{width:auto}}
+
+/* 流れ */
+ol.flow{margin:0;padding-left:0;list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:12px}
+ol.flow li{counter-increment:s;display:flex;gap:12px;align-items:flex-start;font-size:14.5px;color:var(--ink-2)}
+ol.flow li::before{
+  content:counter(s);flex:none;width:25px;height:25px;border-radius:50%;
+  background:var(--green-soft);color:var(--green-ink);border:1px solid var(--green);
+  font-family:var(--f-num);font-size:12px;font-weight:700;
+  display:grid;place-items:center;margin-top:2px;
+}
+ol.flow li b{color:var(--ink);font-weight:700}
+
+.seal{
+  align-self:flex-start;border:2px solid var(--seal);color:var(--seal);
+  border-radius:3px;padding:5px 10px;font-family:var(--f-display);font-weight:700;
+  font-size:13px;letter-spacing:.14em;transform:rotate(-3deg);
+}
+footer{text-align:center;color:var(--ink-3);font-size:12.5px;line-height:1.9;padding-top:6px}
+
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <b data-ja="さらんworks" data-en="saran works">さらんworks</b>
+      <span data-ja="体験デモ" data-en="Live demo">体験デモ</span>
+    </div>
+    <div class="switch" role="group" aria-label="言語 / Language">
+      <button type="button" id="btn-ja" aria-pressed="true">日本語</button>
+      <button type="button" id="btn-en" aria-pressed="false">English</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <p class="eyebrow" data-ja="触って確かめてください" data-en="Try it yourself">触って確かめてください</p>
+    <h1 data-ja="あなたの会社専用アプリ作成します" data-en="We build an app just for your company">あなたの会社専用アプリ作成します</h1>
+    <p class="lead" data-ja="下の3つは、説明用の絵ではありません。実際に動きます。数字を変えると、その場で答えが変わります。現場のスマホで、これと同じことができるようになります。" data-en="The three tools below are not pictures. They actually run. Change the numbers and the answer changes on the spot. This is what your team will have on their phones in the field.">下の3つは、説明用の絵ではありません。実際に動きます。数字を変えると、その場で答えが変わります。現場のスマホで、これと同じことができるようになります。</p>
+    <div class="try"><span class="dot"></span><span data-ja="この画面はスマホでもそのまま使えます" data-en="This screen works the same on a phone">この画面はスマホでもそのまま使えます</span></div>
+  </section>
+
+  <!-- 1. 見積 -->
+  <section class="card">
+    <div>
+      <p class="eyebrow" data-ja="デモ 1 ／ 草刈りの見積" data-en="Demo 1 / Mowing quote">デモ 1 ／ 草刈りの見積</p>
+      <h2 data-ja="現場に立ったまま、金額を出す" data-en="Price the job while standing on site">現場に立ったまま、金額を出す</h2>
+      <p class="sub" data-ja="面積と条件を入れるだけ。内訳まで出るので、そのまま施主に見せられます。" data-en="Enter the area and conditions. The breakdown appears too, so you can show it to the client as is.">面積と条件を入れるだけ。内訳まで出るので、そのまま施主に見せられます。</p>
+      <div class="shift">
+        <div class="now"><b data-ja="今" data-en="Now">今</b><span data-ja="寸法をメモして持ち帰り、事務所のエクセルで計算して、翌日に電話で伝える" data-en="Note the measurements, drive back, open the spreadsheet, call the client the next day">寸法をメモして持ち帰り、事務所のエクセルで計算して、翌日に電話で伝える</span></div>
+        <div class="next"><b data-ja="これから" data-en="After">これから</b><span data-ja="その場で金額を見せて、そのまま「お願いします」をもらう" data-en="Show the price on the spot and get the go-ahead there and then">その場で金額を見せて、そのまま「お願いします」をもらう</span></div>
+      </div>
+    </div>
+
+    <div class="fields two">
+      <label for="q-area">
+        <span data-ja="面積（㎡）" data-en="Area (m²)">面積（㎡）</span>
+        <input type="number" id="q-area" value="450" min="0" max="20000" step="10" inputmode="numeric">
+      </label>
+      <label for="q-dist">
+        <span data-ja="現場までの距離（km・片道）" data-en="Distance to site (km, one way)">現場までの距離（km・片道）</span>
+        <input type="number" id="q-dist" value="12" min="0" max="200" step="1" inputmode="numeric">
+      </label>
+      <label for="q-slope">
+        <span data-ja="地面の状態" data-en="Ground">地面の状態</span>
+        <select id="q-slope">
+          <option value="flat" data-ja="平地（機械が入る）" data-en="Flat — machine access">平地（機械が入る）</option>
+          <option value="slope" data-ja="傾斜地（手刈りが混ざる）" data-en="Slope — partly by hand">傾斜地（手刈りが混ざる）</option>
+        </select>
+      </label>
+      <label for="q-grass">
+        <span data-ja="草の丈" data-en="Grass height">草の丈</span>
+        <select id="q-grass">
+          <option value="1" data-ja="膝下" data-en="Below the knee">膝下</option>
+          <option value="1.3" selected data-ja="腰まで" data-en="Up to the waist">腰まで</option>
+          <option value="1.6" data-ja="背丈以上" data-en="Over head height">背丈以上</option>
+        </select>
+      </label>
+      <label for="q-waste">
+        <span data-ja="刈った草" data-en="Cuttings">刈った草</span>
+        <select id="q-waste">
+          <option value="0" data-ja="現場に敷いて置く" data-en="Leave on site">現場に敷いて置く</option>
+          <option value="1" selected data-ja="持ち帰って処分する" data-en="Haul away and dispose">持ち帰って処分する</option>
+        </select>
+      </label>
+      <label for="q-days">
+        <span data-ja="作業人数" data-en="Crew size">作業人数</span>
+        <select id="q-days">
+          <option value="1" data-ja="1人" data-en="1 person">1人</option>
+          <option value="2" selected data-ja="2人" data-en="2 people">2人</option>
+          <option value="3" data-ja="3人" data-en="3 people">3人</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="slip" id="q-slip"></div>
+    <p class="note" id="q-note"></p>
+    <button type="button" class="act" id="q-save" data-ja="この内容で見積書を作る" data-en="Create the quote">この内容で見積書を作る</button>
+  </section>
+
+  <!-- 2. 配送料 -->
+  <section class="card">
+    <div>
+      <p class="eyebrow" data-ja="デモ 2 ／ 配送料の計算" data-en="Demo 2 / Delivery charge">デモ 2 ／ 配送料の計算</p>
+      <h2 data-ja="積載量まで数えて、運賃を出す" data-en="Count the loads, then price the run">積載量まで数えて、運賃を出す</h2>
+      <p class="sub" data-ja="1台に積める量を超えたら便数が増える。その計算まで含めて自動で出します。" data-en="When the load exceeds one truck, the number of runs goes up. That is included in the calculation.">1台に積める量を超えたら便数が増える。その計算まで含めて自動で出します。</p>
+      <div class="shift">
+        <div class="now"><b data-ja="今" data-en="Now">今</b><span data-ja="距離を地図で調べ、料金表を見て、便数を頭で数える" data-en="Check the map, look up the rate table, work out the runs in your head">距離を地図で調べ、料金表を見て、便数を頭で数える</span></div>
+        <div class="next"><b data-ja="これから" data-en="After">これから</b><span data-ja="電話を受けながら、その場で運賃を答える" data-en="Answer with the price while still on the phone">電話を受けながら、その場で運賃を答える</span></div>
+      </div>
+    </div>
+
+    <div class="fields">
+      <label for="d-km">
+        <span class="range-head">
+          <span data-ja="配達先までの距離" data-en="Distance to the drop-off">配達先までの距離</span>
+          <output id="d-km-out" for="d-km">18 km</output>
+        </span>
+        <input type="range" id="d-km" min="1" max="80" value="18" step="1">
+      </label>
+      <label for="d-bags">
+        <span class="range-head">
+          <span data-ja="積む数量（袋）" data-en="Quantity (bags)">積む数量（袋）</span>
+          <output id="d-bags-out" for="d-bags">14 袋</output>
+        </span>
+        <input type="range" id="d-bags" min="1" max="60" value="14" step="1">
+      </label>
+    </div>
+
+    <div class="slip" id="d-slip"></div>
+    <p class="note" id="d-note"></p>
+    <button type="button" class="act" id="d-save" data-ja="この運賃で受注する" data-en="Book it at this price">この運賃で受注する</button>
+  </section>
+
+  <!-- 3. 予約 -->
+  <section class="card">
+    <div>
+      <p class="eyebrow" data-ja="デモ 3 ／ 予約の受付" data-en="Demo 3 / Taking a booking">デモ 3 ／ 予約の受付</p>
+      <h2 data-ja="受け付けと返信を、同時に終わらせる" data-en="Take the booking and reply in one step">受け付けと返信を、同時に終わらせる</h2>
+      <p class="sub" data-ja="お客様が自分で入れた予約が、そのまま台帳に入ります。確認メールは自動で出ます。" data-en="The booking your customer enters goes straight into the ledger. The confirmation goes out automatically.">お客様が自分で入れた予約が、そのまま台帳に入ります。確認メールは自動で出ます。</p>
+      <div class="shift">
+        <div class="now"><b data-ja="今" data-en="Now">今</b><span data-ja="電話を受けて紙に書き、あとで台帳に転記し、確認の返信を打つ" data-en="Take the call, write it on paper, copy it into the ledger later, then type the confirmation">電話を受けて紙に書き、あとで台帳に転記し、確認の返信を打つ</span></div>
+        <div class="next"><b data-ja="これから" data-en="After">これから</b><span data-ja="転記なし。書き写しの間違いも、返信のし忘れもなくなる" data-en="No copying. No transcription errors, no forgotten replies">転記なし。書き写しの間違いも、返信のし忘れもなくなる</span></div>
+      </div>
+    </div>
+
+    <div class="fields two">
+      <label for="b-name"><span data-ja="お名前" data-en="Name">お名前</span><input type="text" id="b-name" value="山本" autocomplete="off"></label>
+      <label for="b-date"><span data-ja="希望日" data-en="Preferred date">希望日</span><input type="date" id="b-date"></label>
+      <label for="b-time">
+        <span data-ja="時間帯" data-en="Time">時間帯</span>
+        <select id="b-time">
+          <option value="am" data-ja="午前（9:00〜12:00）" data-en="Morning (9:00–12:00)">午前（9:00〜12:00）</option>
+          <option value="pm" selected data-ja="午後（13:00〜16:00）" data-en="Afternoon (13:00–16:00)">午後（13:00〜16:00）</option>
+          <option value="ev" data-ja="夕方（16:00〜18:00）" data-en="Evening (16:00–18:00)">夕方（16:00〜18:00）</option>
+        </select>
+      </label>
+      <label for="b-people">
+        <span data-ja="ご用件" data-en="Request">ご用件</span>
+        <select id="b-people">
+          <option value="q" data-ja="現地を見てほしい" data-en="Site visit">現地を見てほしい</option>
+          <option value="w" selected data-ja="薪を配達してほしい" data-en="Firewood delivery">薪を配達してほしい</option>
+          <option value="r" data-ja="修理を頼みたい" data-en="Repair">修理を頼みたい</option>
+        </select>
+      </label>
+    </div>
+
+    <button type="button" class="act" id="b-send" data-ja="この内容で受け付ける" data-en="Submit the booking">この内容で受け付ける</button>
+
+    <div class="receipt" id="b-receipt">
+      <div class="no" id="b-no"></div>
+      <p style="font-size:14px" id="b-msg"></p>
+      <p class="eyebrow" data-ja="自動で送られる返信" data-en="The reply that goes out automatically">自動で送られる返信</p>
+      <div class="mail" id="b-mail"></div>
+    </div>
+  </section>
+
+  <!-- 履歴 -->
+  <section class="card">
+    <div>
+      <p class="eyebrow" data-ja="そして、記録が残る" data-en="And it all gets recorded">そして、記録が残る</p>
+      <h2 data-ja="出した数字は、消えずに貯まる" data-en="Every number you produce is kept">出した数字は、消えずに貯まる</h2>
+      <p class="sub" data-ja="上で作ったものが、ここに並びます。実際の運用では、事務所のスプレッドシートにも同じものが自動で入ります。「あの時いくらで出したか」を探さなくてよくなります。" data-en="What you created above appears here. In the real system the same rows also land in your office spreadsheet, so nobody has to hunt for what you quoted last time.">上で作ったものが、ここに並びます。実際の運用では、事務所のスプレッドシートにも同じものが自動で入ります。「あの時いくらで出したか」を探さなくてよくなります。</p>
+    </div>
+    <ul class="log" id="log"></ul>
+    <button type="button" class="ghost" id="log-clear" data-ja="この記録を消す" data-en="Clear this log">この記録を消す</button>
+  </section>
+
+  <!-- できること -->
+  <section class="card">
+    <div>
+      <p class="eyebrow" data-ja="作れるもの" data-en="What we build">作れるもの</p>
+      <h2 data-ja="既製品に業務を合わせず、業務に合わせて作る" data-en="We fit the tool to your work, not your work to the tool">既製品に業務を合わせず、業務に合わせて作る</h2>
+    </div>
+    <div class="menu">
+      <div><span class="k" data-ja="現場の計算" data-en="Field calculations">現場の計算</span><span class="v" data-ja="エクセルでやっている見積・運賃・原価・必要量の計算を、そのままスマホへ。計算式はお客様のものをそのまま使います。" data-en="Quotes, freight, cost and quantity calculations move from the spreadsheet to the phone. We keep your formulas exactly as they are.">エクセルでやっている見積・運賃・原価・必要量の計算を、そのままスマホへ。計算式はお客様のものをそのまま使います。</span></div>
+      <div><span class="k" data-ja="予約・受注" data-en="Bookings">予約・受注</span><span class="v" data-ja="予約の受付、注文フォーム、定期便の管理、確認メールやLINEの自動送信。" data-en="Booking forms, order forms, recurring deliveries, automatic confirmation by email or LINE.">予約の受付、注文フォーム、定期便の管理、確認メールやLINEの自動送信。</span></div>
+      <div><span class="k" data-ja="今の道具と連携" data-en="Works with your tools">今の道具と連携</span><span class="v" data-ja="Googleスプレッドシート、カレンダー、会計ソフト、決済。今使っているものを捨てずにつなぎます。" data-en="Google Sheets, Calendar, your accounting software, card payments. We connect what you already use instead of replacing it.">Googleスプレッドシート、カレンダー、会計ソフト、決済。今使っているものを捨てずにつなぎます。</span></div>
+      <div><span class="k" data-ja="日本語と英語" data-en="Two languages">日本語と英語</span><span class="v" data-ja="この画面の右上と同じ切り替えです。外国のお客様にも同じ内容が届きます。" data-en="The same switch you used at the top of this page. Overseas customers see exactly the same content.">この画面の右上と同じ切り替えです。外国のお客様にも同じ内容が届きます。</span></div>
+      <div><span class="k" data-ja="サイト制作" data-en="Websites">サイト制作</span><span class="v" data-ja="会社・店舗・施設の紹介、商品の販売ページ、問い合わせの自動応答。" data-en="Company, shop and facility sites, product pages, automatic answers to common questions.">会社・店舗・施設の紹介、商品の販売ページ、問い合わせの自動応答。</span></div>
+      <div><span class="k" data-ja="公開のあと" data-en="After launch">公開のあと</span><span class="v" data-ja="作って終わりにしません。単価改定も、機能の追加も、そのまま続けて面倒を見ます。" data-en="We do not disappear at handover. Price revisions and new features keep coming from the same hands.">作って終わりにしません。単価改定も、機能の追加も、そのまま続けて面倒を見ます。</span></div>
+    </div>
+  </section>
+
+  <!-- 流れ -->
+  <section class="card">
+    <div>
+      <p class="eyebrow" data-ja="進め方" data-en="How we work">進め方</p>
+      <h2 data-ja="一番困っているところ、ひとつだけから始めます" data-en="We start with the one thing that hurts most">一番困っているところ、ひとつだけから始めます</h2>
+    </div>
+    <ol class="flow">
+      <li><span><b data-ja="話を聞く。" data-en="We listen. ">話を聞く。</b><span data-ja="今どの作業に何時間取られているかを、数字で伺います。" data-en="We ask how many hours each task actually takes, in numbers.">今どの作業に何時間取られているかを、数字で伺います。</span></span></li>
+      <li><span><b data-ja="小さく作って見せる。" data-en="We build a small piece and show it. ">小さく作って見せる。</b><span data-ja="全部を一度に作りません。一番時間を食っている一つだけを先に作ります。" data-en="Not everything at once. Just the part that eats the most time.">全部を一度に作りません。一番時間を食っている一つだけを先に作ります。</span></span></li>
+      <li><span><b data-ja="使いながら直す。" data-en="You use it, we adjust. ">使いながら直す。</b><span data-ja="実際に現場で使ってもらい、合わないところを直します。" data-en="Your crew uses it in the field and we fix what does not fit.">実際に現場で使ってもらい、合わないところを直します。</span></span></li>
+      <li><span><b data-ja="続けて面倒を見る。" data-en="We keep looking after it. ">続けて面倒を見る。</b><span data-ja="単価が変わっても、人が増えても、こちらで直し続けます。" data-en="Prices change, staff changes; we keep it working.">単価が変わっても、人が増えても、こちらで直し続けます。</span></span></li>
+    </ol>
+    <div class="seal" data-ja="小さく始めて、育てる" data-en="START SMALL, GROW IT">小さく始めて、育てる</div>
+    <p class="note" data-ja="ご相談の連絡先は、この行を書き換えて入れてください（電話番号・メール・問い合わせフォームのURL）。" data-en="Replace this line with how to reach you — phone, email, or the URL of your contact form.">ご相談の連絡先は、この行を書き換えて入れてください（電話番号・メール・問い合わせフォームのURL）。</p>
+  </section>
+
+  <footer>
+    <p data-ja="さらんworks ／ Webサイト制作・システム構築" data-en="saran works — websites and business systems">さらんworks ／ Webサイト制作・システム構築</p>
+    <p data-ja="このページの単価はすべて説明用のサンプルです。実際は御社の単価表と計算式をそのまま移します。" data-en="Every rate on this page is a sample for demonstration. In a real build we carry over your own rates and formulas unchanged.">このページの単価はすべて説明用のサンプルです。実際は御社の単価表と計算式をそのまま移します。</p>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  var lang = 'ja';
+  var KEY = 'saranworks-demo-log-v1';
+
+  function yen(n){ return '¥' + Math.round(n).toLocaleString('ja-JP'); }
+  function t(ja, en){ return lang === 'ja' ? ja : en; }
+
+  /* ---------- 言語切り替え ---------- */
+  function applyLang(){
+    document.documentElement.lang = lang === 'ja' ? 'ja' : 'en';
+    var nodes = document.querySelectorAll('[data-ja]');
+    for (var i = 0; i < nodes.length; i++){
+      var el = nodes[i];
+      var txt = lang === 'ja' ? el.getAttribute('data-ja') : el.getAttribute('data-en');
+      if (txt !== null) el.textContent = txt;
+    }
+    document.getElementById('btn-ja').setAttribute('aria-pressed', lang === 'ja' ? 'true' : 'false');
+    document.getElementById('btn-en').setAttribute('aria-pressed', lang === 'en' ? 'true' : 'false');
+    quote(); delivery(); drawLog();
+    var r = document.getElementById('b-receipt');
+    if (r.classList.contains('on')) booking(true);
+  }
+  document.getElementById('btn-ja').addEventListener('click', function(){ lang = 'ja'; applyLang(); });
+  document.getElementById('btn-en').addEventListener('click', function(){ lang = 'en'; applyLang(); });
+
+  /* ---------- 記録 ---------- */
+  function readLog(){
+    try {
+      var raw = localStorage.getItem(KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) { return []; }
+  }
+  function writeLog(list){
+    try { localStorage.setItem(KEY, JSON.stringify(list.slice(0, 8))); } catch (e) { /* 保存できなくても画面は動く */ }
+  }
+  var memLog = readLog();
+
+  function addLog(entry){
+    entry.at = new Date().toISOString();
+    memLog.unshift(entry);
+    memLog = memLog.slice(0, 8);
+    writeLog(memLog);
+    drawLog();
+  }
+
+  var SAMPLES = [
+    { sample: true, kindJa: '草刈りの見積', kindEn: 'Mowing quote', whoJa: '大出 様・畑の土手 380㎡', whoEn: 'Oide — field bank, 380 m²', amt: 62700 },
+    { sample: true, kindJa: '薪の配達', kindEn: 'Firewood delivery', whoJa: '白馬村・22袋・3便', whoEn: 'Hakuba — 22 bags, 3 runs', amt: 5400 }
+  ];
+
+  function drawLog(){
+    var ul = document.getElementById('log');
+    ul.innerHTML = '';
+    var list = memLog.length ? memLog : SAMPLES;
+    for (var i = 0; i < list.length; i++){
+      var e = list[i];
+      var li = document.createElement('li');
+      var what = document.createElement('div'); what.className = 'what';
+      var b = document.createElement('b');
+      b.textContent = t(e.kindJa, e.kindEn);
+      if (e.sample){
+        var tag = document.createElement('span'); tag.className = 'tag';
+        tag.textContent = t('例', 'EXAMPLE');
+        b.appendChild(document.createTextNode(' '));
+        b.appendChild(tag);
+      }
+      var s = document.createElement('span');
+      var when = e.at ? new Date(e.at) : null;
+      var stamp = when ? when.toLocaleTimeString(lang === 'ja' ? 'ja-JP' : 'en-GB', { hour: '2-digit', minute: '2-digit' }) : t('先週', 'last week');
+      s.textContent = t(e.whoJa, e.whoEn) + ' ・ ' + stamp;
+      what.appendChild(b); what.appendChild(s);
+      var amt = document.createElement('span'); amt.className = 'amt';
+      amt.textContent = e.text ? e.text : yen(e.amt);
+      li.appendChild(what); li.appendChild(amt);
+      ul.appendChild(li);
+    }
+  }
+  document.getElementById('log-clear').addEventListener('click', function(){
+    memLog = [];
+    try { localStorage.removeItem(KEY); } catch (e) { /* 消せなくても画面は戻る */ }
+    drawLog();
+  });
+
+  /* ---------- 1. 草刈りの見積 ---------- */
+  var RATE_FLAT = 90, RATE_SLOPE = 140, DISPOSAL = 45, TRIP_BASE = 3000, PER_KM = 60, MIN_TOTAL = 15000;
+
+  function row(labelJa, labelEn, value, cls){
+    return '<div class="row' + (cls ? ' ' + cls : '') + '">' +
+           '<span class="lbl">' + t(labelJa, labelEn) + '</span>' +
+           '<span class="val">' + value + '</span></div>';
+  }
+
+  function quote(){
+    var area = Math.max(0, Number(document.getElementById('q-area').value) || 0);
+    var km = Math.max(0, Number(document.getElementById('q-dist').value) || 0);
+    var slope = document.getElementById('q-slope').value;
+    var grass = Number(document.getElementById('q-grass').value);
+    var waste = document.getElementById('q-waste').value === '1';
+    var crew = Number(document.getElementById('q-days').value);
+
+    var unit = slope === 'slope' ? RATE_SLOPE : RATE_FLAT;
+    var work = area * unit * grass;
+    var disposal = waste ? area * DISPOSAL : 0;
+    var trip = (TRIP_BASE + km * PER_KM * 2) * crew;
+    var sub = work + disposal + trip;
+    var lifted = sub < MIN_TOTAL;
+    if (lifted) sub = MIN_TOTAL;
+    var tax = sub * 0.1;
+    var total = sub + tax;
+
+    // 1人あたり1日400㎡を目安にした作業日数
+    var days = Math.max(1, Math.ceil(area / (400 * crew)));
+
+    var html = '';
+    html += row('草刈り作業　' + area.toLocaleString('ja-JP') + '㎡ × ' + yen(unit) + (grass !== 1 ? ' × 草丈' + grass : ''),
+                'Mowing — ' + area.toLocaleString('en-US') + ' m² × ' + yen(unit) + (grass !== 1 ? ' × ' + grass + ' (grass)' : ''),
+                yen(work));
+    if (disposal > 0) html += row('刈草の処分　' + area.toLocaleString('ja-JP') + '㎡ × ' + yen(DISPOSAL),
+                                  'Disposal — ' + area.toLocaleString('en-US') + ' m² × ' + yen(DISPOSAL), yen(disposal));
+    html += row('出張費　' + km + 'km 往復 × ' + crew + '名', 'Travel — ' + km + ' km each way × ' + crew, yen(trip));
+    if (lifted) html += row('最低料金の適用', 'Minimum charge applied', yen(MIN_TOTAL));
+    html += row('消費税', 'Tax', yen(tax));
+    html += row('お見積り金額', 'Quoted total', yen(total), 'total');
+    document.getElementById('q-slip').innerHTML = html;
+
+    document.getElementById('q-note').textContent = t(
+      '作業の目安：' + crew + '名で約' + days + '日。単価は説明用のサンプルです（平地 ' + yen(RATE_FLAT) + '／㎡・傾斜 ' + yen(RATE_SLOPE) + '／㎡・最低料金 ' + yen(MIN_TOTAL) + '）。御社の単価表に入れ替えます。',
+      'Estimated duration: about ' + days + ' day(s) with ' + crew + '. These rates are samples for the demo (flat ' + yen(RATE_FLAT) + '/m², slope ' + yen(RATE_SLOPE) + '/m², minimum ' + yen(MIN_TOTAL) + '). We swap in your own rate table.'
+    );
+
+    return { total: total, area: area, crew: crew };
+  }
+
+  ['q-area','q-dist','q-slope','q-grass','q-waste','q-days'].forEach(function(id){
+    var el = document.getElementById(id);
+    el.addEventListener('input', quote);
+    el.addEventListener('change', quote);
+  });
+
+  document.getElementById('q-save').addEventListener('click', function(){
+    var r = quote();
+    addLog({
+      kindJa: '草刈りの見積', kindEn: 'Mowing quote',
+      whoJa: r.area.toLocaleString('ja-JP') + '㎡・' + r.crew + '名',
+      whoEn: r.area.toLocaleString('en-US') + ' m², crew of ' + r.crew,
+      amt: r.total
+    });
+    var b = document.getElementById('q-save');
+    b.textContent = t('見積書を作りました', 'Quote created');
+    setTimeout(function(){ b.textContent = t('この内容で見積書を作る', 'Create the quote'); }, 1800);
+  });
+
+  /* ---------- 2. 配送料 ---------- */
+  var PER_LOAD = 8;
+
+  function bandOf(km){
+    if (km <= 10) return { fee: 1000, ja: '10kmまで', en: 'up to 10 km' };
+    if (km <= 20) return { fee: 1800, ja: '20kmまで', en: 'up to 20 km' };
+    if (km <= 40) return { fee: 3000, ja: '40kmまで', en: 'up to 40 km' };
+    return { fee: 3000 + (km - 40) * 80, ja: '40km超（超過分 ' + yen(80) + '／km）', en: 'over 40 km (+' + yen(80) + '/km)' };
+  }
+
+  function delivery(){
+    var km = Number(document.getElementById('d-km').value);
+    var bags = Number(document.getElementById('d-bags').value);
+    document.getElementById('d-km-out').textContent = km + ' km';
+    document.getElementById('d-bags-out').textContent = bags + t(' 袋', bags === 1 ? ' bag' : ' bags');
+
+    var band = bandOf(km);
+    var runs = Math.ceil(bags / PER_LOAD);
+    var total = band.fee * runs;
+
+    var html = '';
+    html += row('距離の区分　' + band.ja, 'Distance band — ' + band.en, yen(band.fee));
+    html += row('便数　' + bags + '袋 ÷ 1台' + PER_LOAD + '袋', 'Runs — ' + bags + ' bags ÷ ' + PER_LOAD + ' per load, rounded up', runs + t(' 便', runs === 1 ? ' run' : ' runs'));
+    html += row('配送料', 'Delivery charge', yen(total), 'total');
+    document.getElementById('d-slip').innerHTML = html;
+
+    document.getElementById('d-note').textContent = t(
+      '軽トラ1台に' + PER_LOAD + '袋まで。超えると自動で便数が増えます。実際は御社の車両と積載量に合わせます。',
+      'One truck carries ' + PER_LOAD + ' bags; beyond that the run count rises automatically. We match this to your own vehicles and load limits.'
+    );
+
+    return { total: total, runs: runs, bags: bags, km: km };
+  }
+
+  document.getElementById('d-km').addEventListener('input', delivery);
+  document.getElementById('d-bags').addEventListener('input', delivery);
+
+  document.getElementById('d-save').addEventListener('click', function(){
+    var r = delivery();
+    addLog({
+      kindJa: '薪の配達', kindEn: 'Firewood delivery',
+      whoJa: r.km + 'km・' + r.bags + '袋・' + r.runs + '便',
+      whoEn: r.km + ' km, ' + r.bags + ' bags, ' + r.runs + ' run(s)',
+      amt: r.total
+    });
+    var b = document.getElementById('d-save');
+    b.textContent = t('受注しました', 'Booked');
+    setTimeout(function(){ b.textContent = t('この運賃で受注する', 'Book it at this price'); }, 1800);
+  });
+
+  /* ---------- 3. 予約 ---------- */
+  var dateEl = document.getElementById('b-date');
+  (function(){
+    var d = new Date(); d.setDate(d.getDate() + 3);
+    dateEl.value = d.toISOString().slice(0, 10);
+  })();
+
+  var lastNo = null;
+
+  function booking(redrawOnly){
+    var name = (document.getElementById('b-name').value || '').trim();
+    var date = dateEl.value;
+    var timeSel = document.getElementById('b-time');
+    var reqSel = document.getElementById('b-people');
+    var timeText = timeSel.options[timeSel.selectedIndex].getAttribute(lang === 'ja' ? 'data-ja' : 'data-en');
+    var reqText = reqSel.options[reqSel.selectedIndex].getAttribute(lang === 'ja' ? 'data-ja' : 'data-en');
+
+    if (!redrawOnly){
+      var stamp = (date || '').replace(/-/g, '').slice(2);
+      lastNo = 'R-' + stamp + '-' + String(Math.floor(Math.random() * 90) + 10);
+    }
+
+    var shown = name || t('お客様', 'Customer');
+    var pretty = date
+      ? new Date(date + 'T00:00:00').toLocaleDateString(lang === 'ja' ? 'ja-JP' : 'en-GB',
+          { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' })
+      : t('（日付が未入力です）', '(no date selected)');
+
+    document.getElementById('b-no').textContent = t('受付番号 ', 'Reference ') + lastNo;
+    document.getElementById('b-msg').textContent = t(
+      shown + ' 様　' + pretty + '　' + timeText + '　／　' + reqText,
+      shown + ' — ' + pretty + ', ' + timeText + ' / ' + reqText
+    );
+    document.getElementById('b-mail').textContent = t(
+      shown + ' 様\n\nこのたびはお申し込みをいただき、ありがとうございます。\n下記の内容で承りました。\n\n　受付番号　' + lastNo + '\n　ご希望日　' + pretty + '\n　時間帯　　' + timeText + '\n　ご用件　　' + reqText + '\n\n前日に、担当より確認のご連絡を差し上げます。\nご不明な点がございましたら、このメールにご返信ください。',
+      'Dear ' + shown + ',\n\nThank you for your request. We have it booked as follows.\n\n  Reference  ' + lastNo + '\n  Date       ' + pretty + '\n  Time       ' + timeText + '\n  Request    ' + reqText + '\n\nWe will call you the day before to confirm.\nIf anything needs changing, simply reply to this email.'
+    );
+    document.getElementById('b-receipt').classList.add('on');
+  }
+
+  document.getElementById('b-send').addEventListener('click', function(){
+    booking(false);
+    var name = (document.getElementById('b-name').value || '').trim() || t('お客様', 'Customer');
+    addLog({
+      kindJa: '予約の受付', kindEn: 'Booking',
+      whoJa: name + ' 様・' + dateEl.value,
+      whoEn: name + ' — ' + dateEl.value,
+      text: lastNo
+    });
+  });
+
+  /* ---------- 起動 ---------- */
+  quote();
+  delivery();
+  drawLog();
+})();
+</script>
+</body>
+</html>
