@@ -107,9 +107,36 @@ header.bar{
   border-bottom:1px solid var(--line);
   display:flex;align-items:center;gap:12px;flex-wrap:wrap;
 }
-.brand{display:flex;align-items:baseline;gap:9px;margin-right:auto}
+.brand{display:flex;align-items:baseline;gap:9px;text-decoration:none;color:var(--ink)}
 .brand b{font-size:18px;font-weight:700;letter-spacing:.01em}
 .brand span{font-size:11px;color:var(--ink-3);letter-spacing:.14em;text-transform:uppercase;font-weight:600}
+.bar nav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;margin-right:auto}
+.bar nav::-webkit-scrollbar{display:none}
+.bar nav a{
+  white-space:nowrap;text-decoration:none;color:var(--ink-2);
+  font-size:13px;font-weight:600;padding:7px 12px;border-radius:999px;
+}
+.bar nav a:hover{color:var(--primary);background:var(--tint)}
+.bar nav a[aria-current="page"]{color:var(--primary);background:var(--tint)}
+.bar .right{display:flex;align-items:center;gap:8px;margin-left:auto}
+.mini{
+  display:inline-flex;align-items:center;white-space:nowrap;text-decoration:none;
+  background:var(--primary);color:var(--on-primary);
+  font-size:12.5px;font-weight:600;padding:9px 16px;border-radius:999px;
+}
+.mini:hover{background:var(--primary-2)}
+@media (max-width:640px){
+  .bar nav{order:3;flex-basis:100%;margin-right:0}
+  .bar .right{margin-left:auto}
+  .mini{display:none}
+}
+.back{
+  display:inline-flex;align-items:center;gap:8px;text-decoration:none;
+  color:var(--ink-2);font-size:14px;font-weight:600;
+  padding:12px 22px;border-radius:999px;border:1px solid var(--line-2);background:var(--card);
+}
+.back:hover{color:var(--primary);border-color:var(--primary)}
+.backwrap{display:flex;justify-content:center;padding-top:4px}
 .switch{display:flex;gap:2px;padding:3px;border-radius:999px;background:var(--tint)}
 .switch button{
   font-family:var(--f);font-size:12px;font-weight:600;letter-spacing:.04em;
@@ -274,13 +301,21 @@ footer{text-align:center;color:var(--ink-3);font-size:12.5px;line-height:1.9;pad
 <div class="wrap">
 
   <header class="bar">
-    <div class="brand">
-      <b data-ja="saran" data-en="saran">saran</b>
-      <span data-ja="体験デモ" data-en="Live demo">体験デモ</span>
-    </div>
-    <div class="switch" role="group" aria-label="言語 / Language">
-      <button type="button" id="btn-ja" aria-pressed="true">日本語</button>
-      <button type="button" id="btn-en" aria-pressed="false">English</button>
+    <a class="brand" href="https://saran-systems-no-logo.mmbsaran.chatgpt.site/">
+      <b>saran</b>
+    </a>
+    <nav aria-label="サイトのメニュー">
+      <a href="https://saran-systems-no-logo.mmbsaran.chatgpt.site/#service" data-ja="できること" data-en="What we do">できること</a>
+      <a href="https://saran-systems-no-logo.mmbsaran.chatgpt.site/#works" data-ja="制作実績" data-en="Works">制作実績</a>
+      <a href="./" aria-current="page" data-ja="デモ" data-en="Demo">デモ</a>
+      <a href="https://saran-systems-no-logo.mmbsaran.chatgpt.site/#about" data-ja="私について" data-en="About">私について</a>
+    </nav>
+    <div class="right">
+      <div class="switch" role="group" aria-label="言語 / Language">
+        <button type="button" id="btn-ja" aria-pressed="true">日本語</button>
+        <button type="button" id="btn-en" aria-pressed="false">English</button>
+      </div>
+      <a class="mini" href="mailto:mmbsaran358@gmail.com" data-ja="ご相談はこちら" data-en="Get in touch">ご相談はこちら</a>
     </div>
   </header>
 
@@ -494,6 +529,10 @@ footer{text-align:center;color:var(--ink-3);font-size:12.5px;line-height:1.9;pad
       <a href="tel:07015760775">070-1576-0775</a>
     </div>
   </section>
+
+  <div class="backwrap">
+    <a class="back" href="https://saran-systems-no-logo.mmbsaran.chatgpt.site/"><span aria-hidden="true">←</span><span data-ja="saran のサイトへ戻る" data-en="Back to the saran site">saran のサイトへ戻る</span></a>
+  </div>
 
   <footer>
     <p data-ja="saran ／ 業務システム開発・Webサイト制作" data-en="saran — business systems and websites">saran ／ 業務システム開発・Webサイト制作</p>
