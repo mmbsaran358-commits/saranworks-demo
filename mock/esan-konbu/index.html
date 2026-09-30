@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>サンプルサイト</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@600;700&display=swap">
+<script>
+/* ===========================================================
+   ここだけ書き換える。1社ぶん 10分で終わる。
+   写真は預かっていないので、色の面と「写真が入ります」で置く。
+   分からない項目は空文字にすれば、その行ごと消える。
+   =========================================================== */
+var CONFIG = {
+  会社名:     '株式会社さいとう',
+  よみ:       'サイトウ',
+  一言:       '函館・恵山の海から、昆布とするめを',
+  説明:       '北海道函館市で、道南の海でとれた昆布・するめ・おつまみなどをお届けしています。長く扱ってきた品を、家庭用から贈りものまで、用途に合わせてご用意します。',
+  業種:       '海産加工品の販売',
+
+  取扱商品: [
+    { 名前: '昆布',             説明: '道南産の昆布。だし用から、そのまま食べられるものまで。' },
+    { 名前: 'するめ・干物',     説明: '噛むほどに味が出るものを選んでいます。お酒にも、そのままでも。' },
+    { 名前: 'おつまみ・贈答品', 説明: '詰め合わせもご用意しています。ご贈答にもお使いいただけます。' }
+  ],
+
+  選ばれる理由: [
+    { 見出し: '道南の海のもの',     本文: '函館・恵山の周辺でとれたものを中心に扱っています。' },
+    { 見出し: '長く扱ってきました', 本文: '同じ品を長く扱い、産地とのつながりを続けてきました。' },
+    { 見出し: '贈りものにも',       本文: '詰め合わせや熨斗のご相談も承ります。' }
+  ],
+
+  会社概要: [
+    ['会社名',   '株式会社さいとう'],
+    ['店舗名',   '函館えさん昆布の会'],
+    ['代表者',   '斉藤 正一郎'],
+    ['所在地',   '〒041-0811　北海道函館市富岡町1丁目23-1'],
+    ['電話',     '0138-86-6707'],
+    ['FAX',      '0138-86-6708'],
+    ['事業内容', '海産加工品の販売']
+  ],
+
+  電話:       '0138-86-6707',
+  電話対応:   true,
+  メール:     'hakodate.esan@kyf.biglobe.ne.jp',
+  モール:     { 名前: '楽天市場店', url: 'https://www.rakuten.co.jp/esan-konbu/' },
+
+  色:         '#12506e',
+  色2:        '#eef4f8',
+  明朝見出し: true
+};
+</script>
+<style>
+:root{
+  color-scheme: light;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --brand:#1f5d4c;
+  --soft:#f3f7f4;
+  --paper:#ffffff;
+  --ink:#1c2420;
+  --ink-2:#5b6661;
+  --ink-3:#95a09b;
+  --line:#e3e9e5;
+  --note-bg:#fff7e6;
+  --note-ink:#8a5a00;
+  --note-line:#e8cf9a;
+  --f:'Noto Sans JP',system-ui,sans-serif;
+  --fs:'Noto Serif JP','Noto Sans JP',serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --paper:#141a17;--soft:#1b2420;--ink:#e8eeea;--ink-2:#a9b4ae;--ink-3:#7c8782;--line:#28332d;
+    --note-bg:#2a2314;--note-ink:#e0bb6a;--note-line:#4a3c1c;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --paper:#141a17;--soft:#1b2420;--ink:#e8eeea;--ink-2:#a9b4ae;--ink-3:#7c8782;--line:#28332d;
+  --note-bg:#2a2314;--note-ink:#e0bb6a;--note-line:#4a3c1c;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f);font-size:16px;line-height:1.85;padding-inline:0}
+h1,h2,h3{margin:0;line-height:1.45;text-wrap:balance}
+.serif h1,.serif h2{font-family:var(--fs);font-weight:700}
+p{margin:0}
+.inner{max-width:900px;margin:0 auto;padding-inline:16px}
+
+/* 提案サンプルであることの明示（消さない） */
+.label{
+  background:var(--note-bg);color:var(--note-ink);
+  border-bottom:1px solid var(--note-line);
+  font-size:12.5px;line-height:1.7;padding:10px 16px;text-align:center;
+}
+.label b{font-weight:700}
+
+header.site{border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top, 0px);background:var(--paper);z-index:10}
+header.site .inner{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-block:14px}
+header.site .nm{font-family:var(--fs);font-weight:700;font-size:19px;margin-right:auto}
+header.site .tel{font-size:15px;font-weight:700;color:var(--brand);text-decoration:none;white-space:nowrap}
+
+.hero{background:var(--soft);padding-block:56px}
+.hero h1{font-size:clamp(26px,6vw,40px);color:var(--brand)}
+.hero .lead{margin-top:16px;color:var(--ink-2);max-width:32em}
+.hero .row{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+.btn{display:inline-flex;align-items:center;text-decoration:none;font-weight:700;font-size:15px;padding:13px 26px;border-radius:4px}
+.btn.fill{background:var(--brand);color:#fff}
+.btn.line{border:1px solid var(--brand);color:var(--brand)}
+
+section{padding-block:48px}
+.eyebrow{font-size:12px;letter-spacing:.18em;color:var(--brand);font-weight:700;margin-bottom:8px}
+section h2{font-size:24px;margin-bottom:26px}
+
+.grid{display:grid;grid-template-columns:1fr;gap:20px}
+@media (min-width:700px){.grid{grid-template-columns:repeat(3,1fr)}}
+.tile{border:1px solid var(--line);border-radius:4px;overflow:hidden;display:flex;flex-direction:column}
+.ph{
+  aspect-ratio:4/3;background:var(--soft);display:grid;place-items:center;
+  color:var(--ink-3);font-size:12.5px;border-bottom:1px solid var(--line);text-align:center;padding:10px;
+}
+.tile .body{padding:16px;display:flex;flex-direction:column;gap:6px}
+.tile h3{font-size:16.5px}
+.tile p{font-size:14px;color:var(--ink-2)}
+
+.reasons{display:grid;grid-template-columns:1fr;gap:18px}
+@media (min-width:700px){.reasons{grid-template-columns:repeat(3,1fr)}}
+.reason{background:var(--soft);border-radius:4px;padding:20px;display:flex;flex-direction:column;gap:7px}
+.reason h3{font-size:16px;color:var(--brand)}
+.reason p{font-size:14px;color:var(--ink-2)}
+
+table.about{width:100%;border-collapse:collapse;font-size:14.5px}
+table.about th,table.about td{text-align:left;padding:13px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+table.about th{width:32%;color:var(--ink-2);font-weight:700;white-space:nowrap}
+
+.contact{background:var(--brand);color:#fff;border-radius:4px;padding:34px 22px;text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center}
+.contact h2{color:#fff;margin:0}
+.contact .big{font-family:var(--fs);font-size:clamp(24px,6vw,34px);font-weight:700;color:#fff;text-decoration:none;letter-spacing:.02em}
+.contact p{opacity:.9;font-size:14.5px}
+
+footer.site{border-top:1px solid var(--line);margin-top:48px;padding-block:26px;color:var(--ink-3);font-size:12.5px;text-align:center;line-height:1.9}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body class="serif">
+
+<div class="label">
+  このページは <b>saran</b> が提案用に作成したサンプルです。<b id="lb-name">　</b>の公式サイトではありません。<br>
+  写真と文章は仮のもので、実物とは異なります。
+</div>
+
+<header class="site">
+  <div class="inner">
+    <span class="nm" id="h-name"></span>
+    <a class="tel" id="h-tel" href="#"></a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="inner">
+    <h1 id="hero-h"></h1>
+    <p class="lead" id="hero-lead"></p>
+    <div class="row" id="hero-row"></div>
+  </div>
+</div>
+
+<section class="inner">
+  <p class="eyebrow">PRODUCTS</p>
+  <h2>取り扱っているもの</h2>
+  <div class="grid" id="products"></div>
+</section>
+
+<section class="inner">
+  <p class="eyebrow">REASONS</p>
+  <h2>選ばれている理由</h2>
+  <div class="reasons" id="reasons"></div>
+</section>
+
+<section class="inner">
+  <p class="eyebrow">COMPANY</p>
+  <h2>会社概要</h2>
+  <table class="about"><tbody id="about"></tbody></table>
+</section>
+
+<section class="inner">
+  <div class="contact">
+    <h2>お問い合わせ</h2>
+    <p>お見積り・ご注文は、お電話でお気軽にご連絡ください。</p>
+    <a class="big" id="c-tel" href="#"></a>
+    <p id="c-hours"></p>
+  </div>
+</section>
+
+<footer class="site">
+  <p id="f-name"></p>
+  <p>このページは saran（長野県大町市）が提案用に作成したサンプルです。</p>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+  var C = CONFIG;
+  var root = document.documentElement;
+  if (C.色)  root.style.setProperty('--brand', C.色);
+  if (C.色2) root.style.setProperty('--soft', C.色2);
+  if (!C.明朝見出し) document.body.classList.remove('serif');
+
+  document.title = C.会社名 + '（サンプル）';
+  function set(id, text){ var el = document.getElementById(id); if (el) el.textContent = text; }
+
+  set('lb-name', C.会社名);
+  set('h-name', C.会社名);
+  set('f-name', C.会社名);
+  set('hero-h', C.一言 || C.会社名);
+  set('hero-lead', C.説明);
+
+  var tel = (C.電話 || '').trim();
+  var telOk = (C.電話対応 !== false) && tel;
+  var telLink = 'tel:' + tel.replace(/[^0-9+]/g, '');
+  var mail = (C.メール || '').trim();
+
+  // 連絡手段の主役。電話を受けていない会社はメールを主役にする
+  var mainText = telOk ? tel : mail;
+  var mainHref = telOk ? telLink : ('mailto:' + mail);
+  ['h-tel','c-tel'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (mainText){ el.textContent = mainText; el.href = mainHref; }
+    else { el.style.display = 'none'; }
+  });
+
+  var hours = (C.会社概要 || []).filter(function(r){ return r[0] === '営業時間'; })[0];
+  set('c-hours', hours ? hours[1] : (telOk ? '' : 'お問い合わせはメールで承っております。'));
+
+  // ヒーローのボタン
+  var row = document.getElementById('hero-row');
+  if (telOk){
+    var a = document.createElement('a');
+    a.className = 'btn fill'; a.href = telLink; a.textContent = '電話で問い合わせる';
+    row.appendChild(a);
+  } else if (mail){
+    var m = document.createElement('a');
+    m.className = 'btn fill'; m.href = 'mailto:' + mail; m.textContent = 'メールで問い合わせる';
+    row.appendChild(m);
+  }
+  if (C.モール && C.モール.url){
+    var b = document.createElement('a');
+    b.className = 'btn line'; b.href = C.モール.url; b.target = '_blank'; b.rel = 'noopener';
+    b.textContent = C.モール.名前 + 'で買う';
+    row.appendChild(b);
+  }
+
+  // 取扱商品
+  var g = document.getElementById('products');
+  (C.取扱商品 || []).forEach(function(p){
+    if (!p || !p.名前) return;
+    var t = document.createElement('div'); t.className = 'tile';
+    var ph = document.createElement('div'); ph.className = 'ph';
+    ph.textContent = p.名前 + 'の写真が入ります';
+    var body = document.createElement('div'); body.className = 'body';
+    var h = document.createElement('h3'); h.textContent = p.名前;
+    var d = document.createElement('p'); d.textContent = p.説明 || '';
+    body.appendChild(h); body.appendChild(d);
+    t.appendChild(ph); t.appendChild(body);
+    g.appendChild(t);
+  });
+
+  // 選ばれる理由（見出しか本文が空の項目は出さない）
+  var r = document.getElementById('reasons');
+  (C.選ばれる理由 || []).forEach(function(x){
+    if (!x || !x.見出し || !x.本文) return;
+    var el = document.createElement('div'); el.className = 'reason';
+    var h = document.createElement('h3'); h.textContent = x.見出し;
+    var p = document.createElement('p'); p.textContent = x.本文;
+    el.appendChild(h); el.appendChild(p);
+    r.appendChild(el);
+  });
+
+  // 会社概要
+  var tb = document.getElementById('about');
+  (C.会社概要 || []).forEach(function(pair){
+    if (!pair || !pair[1]) return;
+    var tr = document.createElement('tr');
+    var th = document.createElement('th'); th.textContent = pair[0];
+    var td = document.createElement('td'); td.textContent = pair[1];
+    tr.appendChild(th); tr.appendChild(td);
+    tb.appendChild(tr);
+  });
+})();
+</script>
+</body>
+</html>
