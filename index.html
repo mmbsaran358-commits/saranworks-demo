@@ -29,6 +29,10 @@
   --on-primary:#ffffff;
   --shadow-sm:0 14px 34px #5b4b8a1f;
   --shadow-lg:0 22px 60px #5b4b8a1f;
+  --warn:#b4451a;
+  --warn-soft:#fbeade;
+  --ok:#1a7a4a;
+  --ok-soft:#e2f3e9;
 
   --f:'Geist','Noto Sans JP','Hiragino Sans','Yu Gothic',system-ui,sans-serif;
   --r-lg:24px;
@@ -53,6 +57,10 @@
     --on-primary:#1b1430;
     --shadow-sm:0 14px 34px #00000055;
     --shadow-lg:0 22px 60px #00000066;
+    --warn:#ff9f72;
+    --warn-soft:#37231a;
+    --ok:#6ee7a0;
+    --ok-soft:#162c22;
   }
 }
 :root[data-theme="dark"]{
@@ -73,6 +81,10 @@
   --on-primary:#1b1430;
   --shadow-sm:0 14px 34px #00000055;
   --shadow-lg:0 22px 60px #00000066;
+  --warn:#ff9f72;
+  --warn-soft:#37231a;
+  --ok:#6ee7a0;
+  --ok-soft:#162c22;
 }
 
 *{box-sizing:border-box}
@@ -244,6 +256,23 @@ button.ghost:hover{border-color:var(--primary);color:var(--primary)}
 .receipt .no{font-size:18px;font-weight:700;color:var(--primary);font-variant-numeric:tabular-nums;letter-spacing:.02em}
 .mail{background:var(--card);border-radius:var(--r-md);padding:15px;font-size:13px;color:var(--ink-2);white-space:pre-wrap;line-height:1.9}
 
+/* 在庫 */
+.stock{display:flex;flex-direction:column;gap:12px}
+.item{background:var(--tint);border-radius:var(--r-md);padding:15px 15px 17px;display:flex;flex-direction:column;gap:12px}
+.item .nm{display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:15px;font-weight:700}
+.item .nums{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;align-items:end}
+.item .cell{display:flex;flex-direction:column;gap:5px;min-width:0}
+.item .cell small{font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--ink-3)}
+.item .cell .fixed{font-size:19px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.3}
+.item input{padding:9px 11px;font-size:17px;background:var(--card)}
+.item .diff{font-size:19px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.3}
+.item .diff.bad{color:var(--warn)}
+.item .diff.good{color:var(--ok)}
+.chip{font-size:11px;font-weight:700;letter-spacing:.04em;padding:3px 10px;border-radius:999px;white-space:nowrap}
+.chip.warn{background:var(--warn-soft);color:var(--warn)}
+.chip.ok{background:var(--ok-soft);color:var(--ok)}
+.chip.hold{background:var(--tint-2);color:var(--ink-2)}
+
 /* 履歴 */
 ul.log{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0}
 ul.log li{display:flex;justify-content:space-between;gap:12px;align-items:baseline;padding:13px 0;font-size:14px;border-bottom:1px solid var(--line)}
@@ -322,7 +351,7 @@ footer{text-align:center;color:var(--ink-3);font-size:12.5px;line-height:1.9;pad
   <section class="hero">
     <p class="eyebrow">Live demo</p>
     <h1 data-ja="あなたの会社専用アプリ作成します" data-en="We build an app just for your company">あなたの会社専用アプリ作成します</h1>
-    <p class="lead" data-ja="下の3つは説明用の画像ではありません。実際に動きます。数字を変えると、その場で答えが変わります。現場のスマホで、これと同じことができるようになります。" data-en="The three tools below are not screenshots. They actually run. Change the numbers and the answer changes on the spot. This is what your team will have on their phones in the field.">下の3つは説明用の画像ではありません。実際に動きます。数字を変えると、その場で答えが変わります。現場のスマホで、これと同じことができるようになります。</p>
+    <p class="lead" data-ja="下の4つは説明用の画像ではありません。実際に動きます。数字を変えると、その場で答えが変わります。現場のスマホで、これと同じことができるようになります。" data-en="The four tools below are not screenshots. They actually run. Change the numbers and the answer changes on the spot. This is what your team will have on their phones in the field.">下の4つは説明用の画像ではありません。実際に動きます。数字を変えると、その場で答えが変わります。現場のスマホで、これと同じことができるようになります。</p>
     <div class="cta">
       <a class="fill" href="mailto:mmbsaran358@gmail.com" data-ja="メールで相談する" data-en="Email us">メールで相談する</a>
       <a class="outline" href="tel:07015760775">070-1576-0775</a>
@@ -479,6 +508,25 @@ footer{text-align:center;color:var(--ink-3);font-size:12.5px;line-height:1.9;pad
     </div>
   </section>
 
+  <!-- 4. 在庫 -->
+  <section class="card">
+    <div class="head">
+      <span class="num">04</span>
+      <p class="eyebrow">Stocktake</p>
+      <h2 data-ja="倉庫で数えて、その場で台帳と合わせる" data-en="Count in the warehouse, reconcile on the spot">倉庫で数えて、その場で台帳と合わせる</h2>
+      <p class="sub" data-ja="数えた数を入れるだけで、台帳とのズレ、仮押さえを除いた「本当に使える数」、発注が必要なものが同時に出ます。今お使いのkintoneやエクセルはそのままで、現場の入力だけを作ります。" data-en="Enter what you counted and you immediately see the gap against the ledger, the quantity genuinely available after reservations, and what needs reordering. Your existing kintone or spreadsheet stays exactly as it is; we only build the part your crew taps in the warehouse.">数えた数を入れるだけで、台帳とのズレ、仮押さえを除いた「本当に使える数」、発注が必要なものが同時に出ます。今お使いのkintoneやエクセルはそのままで、現場の入力だけを作ります。</p>
+      <div class="shift">
+        <div class="now"><b data-ja="今" data-en="NOW">今</b><span data-ja="倉庫でメモ帳に数を書き、事務所に戻って打ち直す。ズレに気づくのは棚卸しの日" data-en="Write the counts on paper in the warehouse, retype them at the office, and only discover the gap at stocktake">倉庫でメモ帳に数を書き、事務所に戻って打ち直す。ズレに気づくのは棚卸しの日</span></div>
+        <div class="next"><b data-ja="これから" data-en="AFTER">これから</b><span data-ja="その場で入力。ズレも、発注が要るものも、その日のうちに分かります" data-en="Enter it on the spot. The gap and the reorders are known the same day">その場で入力。ズレも、発注が要るものも、その日のうちに分かります</span></div>
+      </div>
+    </div>
+
+    <div class="stock" id="stock"></div>
+    <div class="slip" id="s-slip"></div>
+    <p class="note" id="s-note"></p>
+    <button type="button" class="act" id="s-save" data-ja="この数で台帳を合わせる" data-en="Reconcile the ledger">この数で台帳を合わせる</button>
+  </section>
+
   <!-- 履歴 -->
   <section class="card">
     <div class="head">
@@ -499,7 +547,8 @@ footer{text-align:center;color:var(--ink-3);font-size:12.5px;line-height:1.9;pad
     <div class="menu">
       <div><span class="k" data-ja="現場の計算" data-en="Field calculations">現場の計算</span><span class="v" data-ja="エクセルでやっている見積・運賃・原価・必要量の計算を、そのままスマホへ。計算式はお客様のものをそのまま使います。" data-en="Quotes, freight, cost and quantity calculations move from the spreadsheet to the phone. We keep your formulas exactly as they are.">エクセルでやっている見積・運賃・原価・必要量の計算を、そのままスマホへ。計算式はお客様のものをそのまま使います。</span></div>
       <div><span class="k" data-ja="予約・注文の管理" data-en="Bookings and orders">予約・注文の管理</span><span class="v" data-ja="受付から確認、決済、定期便まで、散らばった情報をひとつにまとめます。" data-en="From intake to confirmation, payment and recurring deliveries — scattered information in one place.">受付から確認、決済、定期便まで、散らばった情報をひとつにまとめます。</span></div>
-      <div><span class="k" data-ja="今の道具と連携" data-en="Works with your tools">今の道具と連携</span><span class="v" data-ja="Googleスプレッドシート、カレンダー、会計ソフト、決済。今お使いのものを捨てずにつなぎます。" data-en="Google Sheets, Calendar, your accounting software, card payments. We connect what you already use instead of replacing it.">Googleスプレッドシート、カレンダー、会計ソフト、決済。今お使いのものを捨てずにつなぎます。</span></div>
+      <div><span class="k" data-ja="在庫の管理" data-en="Stock control">在庫の管理</span><span class="v" data-ja="棚卸しのズレ、仮押さえ、発注のタイミング。現場で数えた数がそのまま台帳に入る形にします。" data-en="Stocktake gaps, reservations and reorder timing. What your crew counts in the warehouse lands straight in the ledger.">棚卸しのズレ、仮押さえ、発注のタイミング。現場で数えた数がそのまま台帳に入る形にします。</span></div>
+      <div><span class="k" data-ja="今の道具と連携" data-en="Works with your tools">今の道具と連携</span><span class="v" data-ja="kintone、Googleスプレッドシート、カレンダー、会計ソフト、決済。今お使いのものを捨てずにつなぎます。" data-en="kintone, Google Sheets, Calendar, your accounting software, card payments. We connect what you already use instead of replacing it.">kintone、Googleスプレッドシート、カレンダー、会計ソフト、決済。今お使いのものを捨てずにつなぎます。</span></div>
       <div><span class="k" data-ja="AIを使う場面" data-en="Where AI helps">AIを使う場面</span><span class="v" data-ja="文章整理や問い合わせ対応など、AIが役立つ場面を見極めて業務に組み込みます。" data-en="We judge where AI genuinely helps — tidying text, answering enquiries — and build it in there.">文章整理や問い合わせ対応など、AIが役立つ場面を見極めて業務に組み込みます。</span></div>
       <div><span class="k" data-ja="日本語と英語" data-en="Two languages">日本語と英語</span><span class="v" data-ja="この画面の右上と同じ切り替えです。海外のお客様にも同じ内容が届きます。" data-en="The same switch you used at the top of this page. Overseas customers see exactly the same content.">この画面の右上と同じ切り替えです。海外のお客様にも同じ内容が届きます。</span></div>
       <div><span class="k" data-ja="導入後も改善" data-en="After launch">導入後も改善</span><span class="v" data-ja="作って終わりにしません。単価の改定も、機能の追加も、そのまま続けて面倒を見ます。" data-en="We do not disappear at handover. Price revisions and new features keep coming from the same hands.">作って終わりにしません。単価の改定も、機能の追加も、そのまま続けて面倒を見ます。</span></div>
@@ -562,7 +611,7 @@ footer{text-align:center;color:var(--ink-3);font-size:12.5px;line-height:1.9;pad
     }
     document.getElementById('btn-ja').setAttribute('aria-pressed', lang === 'ja' ? 'true' : 'false');
     document.getElementById('btn-en').setAttribute('aria-pressed', lang === 'en' ? 'true' : 'false');
-    quote(); delivery(); drawLog();
+    quote(); delivery(); drawStock(); stockSummary(); drawLog();
     if (document.getElementById('b-receipt').classList.contains('on')) booking(true);
   }
   document.getElementById('btn-ja').addEventListener('click', function(){ lang = 'ja'; applyLang(); });
@@ -794,9 +843,138 @@ footer{text-align:center;color:var(--ink-3);font-size:12.5px;line-height:1.9;pad
     });
   });
 
+  /* ---------- 04 在庫の棚卸し ---------- */
+  // ledger=台帳の数, opened=開封中, held=仮押さえ（受注済みで出していない分）, reorder=発注点, counted=数えた数
+  var STOCK = [
+    { ja:'ナラ 薪（袋）', en:'Oak firewood (bags)', unitJa:'袋', unitEn:'bags', ledger:128, opened:3, held:12, reorder:40, counted:125 },
+    { ja:'カラマツ 薪（袋）', en:'Larch firewood (bags)', unitJa:'袋', unitEn:'bags', ledger:64, opened:1, held:20, reorder:30, counted:64 },
+    { ja:'焚付け（束）', en:'Kindling (bundles)', unitJa:'束', unitEn:'bundles', ledger:45, opened:0, held:5, reorder:20, counted:41 }
+  ];
+
+  function drawStock(){
+    var box = document.getElementById('stock');
+    box.innerHTML = '';
+    for (var i = 0; i < STOCK.length; i++){
+      var it = STOCK[i];
+      var unit = t(it.unitJa, it.unitEn);
+      var avail = it.counted - it.held;
+      var diff = it.counted - it.ledger;
+
+      var el = document.createElement('div');
+      el.className = 'item';
+
+      var nm = document.createElement('div'); nm.className = 'nm';
+      nm.appendChild(document.createTextNode(t(it.ja, it.en)));
+      if (it.opened > 0){
+        var c1 = document.createElement('span'); c1.className = 'chip hold';
+        c1.textContent = t('開封中 ' + it.opened + unit + ' から先に出す', it.opened + ' open — use these first');
+        nm.appendChild(c1);
+      }
+      var c2 = document.createElement('span');
+      c2.className = 'chip ' + (avail < it.reorder ? 'warn' : 'ok');
+      c2.textContent = avail < it.reorder
+        ? t('発注が必要（残り ' + avail + unit + '）', 'Reorder — ' + avail + ' left')
+        : t('在庫は足りています', 'Stock is fine');
+      nm.appendChild(c2);
+      el.appendChild(nm);
+
+      var nums = document.createElement('div'); nums.className = 'nums';
+
+      var c = document.createElement('div'); c.className = 'cell';
+      c.innerHTML = '<small>' + t('台帳の数', 'On the ledger') + '</small><span class="fixed">' + it.ledger + '</span>';
+      nums.appendChild(c);
+
+      var c3 = document.createElement('div'); c3.className = 'cell';
+      var lab = document.createElement('small'); lab.textContent = t('数えた数', 'Counted');
+      var inp = document.createElement('input');
+      inp.type = 'number'; inp.min = '0'; inp.step = '1'; inp.inputMode = 'numeric';
+      inp.id = 'st-' + i; inp.value = it.counted;
+      inp.setAttribute('aria-label', t(it.ja, it.en) + ' ' + t('数えた数', 'counted'));
+      (function(idx){
+        inp.addEventListener('input', function(){
+          STOCK[idx].counted = Math.max(0, Number(this.value) || 0);
+          stockSummary(); refreshStockChips();
+        });
+      })(i);
+      c3.appendChild(lab); c3.appendChild(inp);
+      nums.appendChild(c3);
+
+      var c4 = document.createElement('div'); c4.className = 'cell';
+      c4.innerHTML = '<small>' + t('ズレ', 'Gap') + '</small>' +
+        '<span class="diff ' + (diff === 0 ? 'good' : 'bad') + '" id="df-' + i + '">' +
+        (diff > 0 ? '+' : '') + diff + '</span>';
+      nums.appendChild(c4);
+
+      el.appendChild(nums);
+      box.appendChild(el);
+    }
+  }
+
+  // 入力のたびに作り直すと入力欄からフォーカスが外れるので、数字と札だけ書き換える
+  function refreshStockChips(){
+    for (var i = 0; i < STOCK.length; i++){
+      var it = STOCK[i];
+      var diff = it.counted - it.ledger;
+      var d = document.getElementById('df-' + i);
+      if (d){
+        d.textContent = (diff > 0 ? '+' : '') + diff;
+        d.className = 'diff ' + (diff === 0 ? 'good' : 'bad');
+      }
+      var avail = it.counted - it.held;
+      var unit = t(it.unitJa, it.unitEn);
+      var field = document.getElementById('st-' + i);
+      if (field){
+        var chips = field.closest('.item').querySelectorAll('.nm .chip');
+        var last = chips[chips.length - 1];
+        if (last){
+          last.className = 'chip ' + (avail < it.reorder ? 'warn' : 'ok');
+          last.textContent = avail < it.reorder
+            ? t('発注が必要（残り ' + avail + unit + '）', 'Reorder — ' + avail + ' left')
+            : t('在庫は足りています', 'Stock is fine');
+        }
+      }
+    }
+  }
+
+  function stockSummary(){
+    var gap = 0, short = [], held = 0;
+    for (var i = 0; i < STOCK.length; i++){
+      var it = STOCK[i];
+      gap += Math.abs(it.counted - it.ledger);
+      held += it.held;
+      if (it.counted - it.held < it.reorder) short.push(t(it.ja, it.en));
+    }
+    var html = '';
+    html += row('台帳と合わなかった数', 'Units that did not match the ledger', gap + t(' 点', gap === 1 ? ' item' : ' items'));
+    html += row('仮押さえ（受注済みでまだ出していない分）', 'Reserved for orders already taken', held + t(' 点', ' items'));
+    html += row('発注が必要なもの', 'Needs reordering',
+      short.length ? short.join(t('・', ', ')) : t('なし', 'none'), 'total');
+    document.getElementById('s-slip').innerHTML = html;
+
+    document.getElementById('s-note').textContent = t(
+      '開封中のものから先に引き当てます。仮押さえを引いた数が「本当に使える数」です。品目・単位・発注点は、御社のものをそのまま入れます。',
+      'Opened stock is allocated first. Subtracting reservations gives the quantity genuinely available. Item names, units and reorder points come from your own list.'
+    );
+    return { gap: gap, short: short.length };
+  }
+
+  document.getElementById('s-save').addEventListener('click', function(){
+    var r = stockSummary();
+    addLog({
+      kindJa: '棚卸し', kindEn: 'Stocktake',
+      whoJa: '3品目・ズレ ' + r.gap + '点', whoEn: '3 items, gap of ' + r.gap,
+      text: r.short ? t('発注 ' + r.short + '件', r.short + ' to reorder') : t('発注なし', 'no reorder')
+    });
+    var b = document.getElementById('s-save');
+    b.textContent = t('台帳を合わせました', 'Ledger reconciled');
+    setTimeout(function(){ b.textContent = t('この数で台帳を合わせる', 'Reconcile the ledger'); }, 1800);
+  });
+
   /* ---------- 起動 ---------- */
   quote();
   delivery();
+  drawStock();
+  stockSummary();
   drawLog();
 })();
 </script>
