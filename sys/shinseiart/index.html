@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>在庫の試作</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<script>
+/* ===========================================================
+   ここだけ書き換える。1社ぶん 15分。
+   相手の品目に置き換えるのが肝心。共通のデモより何倍も効く。
+   数えた数は、わざと台帳とズラしておく（ズレが見えないと意味が伝わらない）。
+   =========================================================== */
+var CONFIG = {
+  会社名:   'シンセイアート株式会社',
+  宛名:     'シンセイアート株式会社 様',
+  業務:     '工場',
+  導入文:   'kintone の導入事例を拝見しました。伝票の手書きから工場長のExcel、経理の会計システムへの転記を年間360時間減らされたとのこと。その転記が片づいたあと、最後まで手作業で残りやすい「現場で数える」ところを、御社の品目で試作しました。',
+  いまの手順: '資材を工場で数えて、あとから入力',
+  これから:   'その場で入れて、ズレも発注もすぐ分かる',
+
+  用語: {
+    台帳:     'kintoneの数',
+    開封中:   '開封済み',
+    仮押さえ: '受注済み・未出庫',
+    発注:     '発注が必要'
+  },
+
+  品目: [
+    { 名前:'コート紙 四六判 90kg', 単位:'連', 台帳:180, 開封中:2, 仮押さえ:35, 発注点:60, 数えた:174 },
+    { 名前:'インク 墨',            単位:'缶', 台帳:46,  開封中:3, 仮押さえ:8,  発注点:20, 数えた:46  },
+    { 名前:'製本用クロス',          単位:'巻', 台帳:28,  開封中:1, 仮押さえ:6,  発注点:12, 数えた:24  }
+  ],
+
+  色: '#5b4b8a'
+};
+</script>
+<style>
+:root{
+  color-scheme: light;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg:#fcfaff;--card:#ffffff;--tint:#f0ecff;--tint-2:#e4dcfa;
+  --line:#ddd5ef;--line-2:#d7d0e8;
+  --ink:#2f2844;--ink-2:#70677f;--ink-3:#aaa0c3;
+  --primary:#5b4b8a;--primary-2:#695895;--violet:#9c82f5;--on-primary:#ffffff;
+  --warn:#b4451a;--warn-soft:#fbeade;--ok:#1a7a4a;--ok-soft:#e2f3e9;
+  --note-bg:#fff7e6;--note-ink:#8a5a00;--note-line:#e8cf9a;
+  --shadow:0 22px 60px #5b4b8a1f;
+  --f:'Geist','Noto Sans JP','Hiragino Sans','Yu Gothic',system-ui,sans-serif;
+  --r:20px;--r2:12px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#141020;--card:#1c1730;--tint:#241d3c;--tint-2:#2b2347;
+    --line:#312950;--line-2:#3a3160;
+    --ink:#ece8f7;--ink-2:#b0a7c9;--ink-3:#8478a5;
+    --primary:#b49cff;--primary-2:#c8b8ff;--on-primary:#1b1430;
+    --warn:#ff9f72;--warn-soft:#37231a;--ok:#6ee7a0;--ok-soft:#162c22;
+    --note-bg:#2a2314;--note-ink:#e0bb6a;--note-line:#4a3c1c;
+    --shadow:0 22px 60px #00000066;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#141020;--card:#1c1730;--tint:#241d3c;--tint-2:#2b2347;
+  --line:#312950;--line-2:#3a3160;
+  --ink:#ece8f7;--ink-2:#b0a7c9;--ink-3:#8478a5;
+  --primary:#b49cff;--primary-2:#c8b8ff;--on-primary:#1b1430;
+  --warn:#ff9f72;--warn-soft:#37231a;--ok:#6ee7a0;--ok-soft:#162c22;
+  --note-bg:#2a2314;--note-ink:#e0bb6a;--note-line:#4a3c1c;
+  --shadow:0 22px 60px #00000066;
+}
+*{box-sizing:border-box}
+body{margin:0;padding-block:0 56px;padding-inline:16px;background:var(--bg);color:var(--ink);
+  font-family:var(--f);font-size:16px;line-height:1.8;-webkit-font-smoothing:antialiased}
+.wrap{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+h1,h2{margin:0;font-weight:700;line-height:1.45;text-wrap:balance}
+p{margin:0}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--violet)}
+
+.label{background:var(--note-bg);color:var(--note-ink);border:1px solid var(--note-line);
+  border-radius:var(--r2);font-size:12.5px;line-height:1.75;padding:12px 14px;margin-top:16px}
+.label b{font-weight:700}
+
+.head{display:flex;flex-direction:column;gap:9px;padding-top:6px}
+.head h1{font-size:clamp(24px,6.4vw,32px)}
+.head .lead{color:var(--ink-2);font-size:15px}
+
+.ba{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;
+  background:var(--card);border-radius:var(--r);padding:18px 16px;box-shadow:var(--shadow)}
+.ba .col{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ba small{font-size:11px;font-weight:600;letter-spacing:.1em;color:var(--ink-3);text-transform:uppercase}
+.ba b{font-size:15px;font-weight:700;line-height:1.5}
+.ba .after b{color:var(--primary)}
+.ba .arr{color:var(--violet);font-size:19px;font-weight:700}
+@media (max-width:460px){.ba{grid-template-columns:1fr;gap:9px}.ba .arr{transform:rotate(90deg);justify-self:start}}
+
+.card{background:var(--card);border-radius:var(--r);padding:24px 18px;
+  display:flex;flex-direction:column;gap:16px;box-shadow:var(--shadow)}
+.card h2{font-size:20px}
+
+.stock{display:flex;flex-direction:column;gap:12px}
+.item{background:var(--tint);border-radius:var(--r2);padding:15px 15px 17px;display:flex;flex-direction:column;gap:12px}
+.item .nm{display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:15px;font-weight:700}
+.item .nums{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;align-items:end}
+.item .cell{display:flex;flex-direction:column;gap:5px;min-width:0}
+.item .cell small{font-size:11px;font-weight:600;letter-spacing:.03em;color:var(--ink-3)}
+.item .cell .fixed{font-size:19px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.3}
+.item input{font-family:var(--f);font-size:17px;font-weight:500;font-variant-numeric:tabular-nums;
+  padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);width:100%}
+.item input:focus{border-color:var(--primary)}
+.item .diff{font-size:19px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.3}
+.item .diff.bad{color:var(--warn)}
+.item .diff.good{color:var(--ok)}
+.chip{font-size:11px;font-weight:700;letter-spacing:.03em;padding:3px 10px;border-radius:999px;white-space:nowrap}
+.chip.warn{background:var(--warn-soft);color:var(--warn)}
+.chip.ok{background:var(--ok-soft);color:var(--ok)}
+.chip.hold{background:var(--tint-2);color:var(--ink-2)}
+
+.slip{background:var(--tint);border-radius:var(--r2);padding:16px}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:8px 0;font-size:13.5px}
+.row+.row{border-top:1px solid var(--line)}
+.row .lbl{color:var(--ink-2)}
+.row .val{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.row.total{border-top:1px solid var(--line-2);margin-top:6px;padding-top:14px}
+.row.total .lbl{font-size:14.5px;font-weight:700;color:var(--ink)}
+.row.total .val{font-size:17px;font-weight:700;color:var(--primary)}
+.note{font-size:12.5px;color:var(--ink-3);line-height:1.75}
+
+.back{background:var(--primary);color:var(--on-primary);border-radius:var(--r);
+  padding:24px 20px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow)}
+.back h2{color:var(--on-primary);font-size:19px}
+.back p{opacity:.88;font-size:14.5px}
+.back .ways{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+.back a{display:inline-flex;align-items:center;text-decoration:none;background:var(--card);color:var(--primary);
+  font-weight:600;font-size:14.5px;padding:11px 20px;border-radius:999px}
+footer{text-align:center;color:var(--ink-3);font-size:12.5px;line-height:1.9}
+:focus-visible{outline:2px solid var(--violet);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="label" id="label"></div>
+
+  <div class="head">
+    <p class="eyebrow">Stocktake</p>
+    <h1 id="h1"></h1>
+    <p class="lead" id="lead"></p>
+  </div>
+
+  <div class="ba">
+    <div class="col"><small>いま</small><b id="ba-now"></b></div>
+    <div class="arr" aria-hidden="true">→</div>
+    <div class="col after"><small>これから</small><b id="ba-next"></b></div>
+  </div>
+
+  <section class="card">
+    <h2 id="h2"></h2>
+    <div class="stock" id="stock"></div>
+    <div class="slip" id="slip"></div>
+    <p class="note" id="note"></p>
+  </section>
+
+  <section class="back">
+    <p class="eyebrow" style="color:#bcaaff">saran</p>
+    <h2>この画面について</h2>
+    <p id="back-p"></p>
+    <div class="ways">
+      <a href="https://demo.saran-cloud.com/">ほかの試作も見る</a>
+      <a href="mailto:mmbsaran358@gmail.com">メールで聞いてみる</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>saran（長野県大町市）／ 業務システム開発<br>mmbsaran358@gmail.com ／ 070-1576-0775</p>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  'use strict';
+  var C = CONFIG, T = C.用語 || {};
+  if (C.色) document.documentElement.style.setProperty('--primary', C.色);
+
+  document.title = C.会社名 + ' 様向け 在庫の試作（saran）';
+  function set(id, v){ var e = document.getElementById(id); if (e) e.textContent = v; }
+
+  document.getElementById('label').innerHTML =
+    'このページは <b>saran</b> が ' + C.宛名 + ' 向けに作成した試作です。' +
+    C.会社名 + ' の公式なものではありません。<br>品目と数字は、公開されている情報から想定して置いた仮のものです。';
+
+  set('h1', C.業務 + 'で数えて、その場で合わせる');
+  set('lead', C.導入文);
+  set('ba-now', C.いまの手順);
+  set('ba-next', C.これから);
+  set('h2', '数えた数を入れてみてください');
+  set('back-p', '御社の品目に置き換えて作ってあります。実際には品目も単位も発注点も、御社のものをそのまま入れます。'
+    + ' kintone はそのまま残し、ここで入れた数を kintone に戻す形になります。');
+
+  var ITEMS = (C.品目 || []).map(function(x){ return Object.assign({}, x); });
+
+  function row(label, value, cls){
+    return '<div class="row' + (cls ? ' ' + cls : '') + '"><span class="lbl">' + label +
+           '</span><span class="val">' + value + '</span></div>';
+  }
+
+  function draw(){
+    var box = document.getElementById('stock');
+    box.innerHTML = '';
+    ITEMS.forEach(function(it, i){
+      var avail = it.数えた - it.仮押さえ;
+      var diff  = it.数えた - it.台帳;
+
+      var el = document.createElement('div'); el.className = 'item';
+      var nm = document.createElement('div'); nm.className = 'nm';
+      nm.appendChild(document.createTextNode(it.名前));
+      if (it.開封中 > 0){
+        var c1 = document.createElement('span'); c1.className = 'chip hold';
+        c1.textContent = (T.開封中 || '開封済み') + ' ' + it.開封中 + it.単位 + ' から先に出す';
+        nm.appendChild(c1);
+      }
+      var c2 = document.createElement('span');
+      c2.className = 'chip ' + (avail < it.発注点 ? 'warn' : 'ok');
+      c2.textContent = avail < it.発注点
+        ? (T.発注 || '発注が必要') + '（残り ' + avail + it.単位 + '）'
+        : '在庫は足りています';
+      nm.appendChild(c2);
+      el.appendChild(nm);
+
+      var nums = document.createElement('div'); nums.className = 'nums';
+      var a = document.createElement('div'); a.className = 'cell';
+      a.innerHTML = '<small>' + (T.台帳 || '台帳の数') + '</small><span class="fixed">' + it.台帳 + '</span>';
+      nums.appendChild(a);
+
+      var b = document.createElement('div'); b.className = 'cell';
+      var lab = document.createElement('small'); lab.textContent = '数えた数';
+      var inp = document.createElement('input');
+      inp.type = 'number'; inp.min = '0'; inp.step = '1'; inp.inputMode = 'numeric';
+      inp.id = 'st-' + i; inp.value = it.数えた;
+      inp.setAttribute('aria-label', it.名前 + ' 数えた数');
+      inp.addEventListener('input', function(){
+        ITEMS[i].数えた = Math.max(0, Number(this.value) || 0);
+        refresh(); summary();
+      });
+      b.appendChild(lab); b.appendChild(inp);
+      nums.appendChild(b);
+
+      var c = document.createElement('div'); c.className = 'cell';
+      c.innerHTML = '<small>ズレ</small><span class="diff ' + (diff === 0 ? 'good' : 'bad') +
+                    '" id="df-' + i + '">' + (diff > 0 ? '+' : '') + diff + '</span>';
+      nums.appendChild(c);
+
+      el.appendChild(nums);
+      box.appendChild(el);
+    });
+  }
+
+  // 入力のたびに作り直すとフォーカスが外れるので、数字と札だけ書き換える
+  function refresh(){
+    ITEMS.forEach(function(it, i){
+      var diff = it.数えた - it.台帳;
+      var d = document.getElementById('df-' + i);
+      if (d){
+        d.textContent = (diff > 0 ? '+' : '') + diff;
+        d.className = 'diff ' + (diff === 0 ? 'good' : 'bad');
+      }
+      var field = document.getElementById('st-' + i);
+      if (!field) return;
+      var chips = field.closest('.item').querySelectorAll('.nm .chip');
+      var last = chips[chips.length - 1];
+      if (!last) return;
+      var avail = it.数えた - it.仮押さえ;
+      last.className = 'chip ' + (avail < it.発注点 ? 'warn' : 'ok');
+      last.textContent = avail < it.発注点
+        ? (T.発注 || '発注が必要') + '（残り ' + avail + it.単位 + '）'
+        : '在庫は足りています';
+    });
+  }
+
+  function summary(){
+    var gap = 0, held = 0, short = [];
+    ITEMS.forEach(function(it){
+      gap  += Math.abs(it.数えた - it.台帳);
+      held += it.仮押さえ;
+      if (it.数えた - it.仮押さえ < it.発注点) short.push(it.名前);
+    });
+    var html = '';
+    html += row((T.台帳 || '台帳') + 'と合わなかった数', gap + ' 点');
+    html += row(T.仮押さえ || '受注済み・未出庫', held + ' 点');
+    html += row(T.発注 || '発注が必要', short.length ? short.join('・') : 'なし', 'total');
+    document.getElementById('slip').innerHTML = html;
+    document.getElementById('note').textContent =
+      (T.開封中 || '開封済み') + 'のものから先に引き当て、' + (T.仮押さえ || '受注済み分') +
+      'を引いた数が「本当に使える数」です。品目・単位・発注点は、御社のものをそのまま入れます。';
+  }
+
+  draw(); summary();
+})();
+</script>
+</body>
+</html>
