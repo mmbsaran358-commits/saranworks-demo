@@ -2,7 +2,7 @@
 
 商談の場で見込み客に触ってもらうためのデモページ。
 
-- 公開URL: https://mmbsaran358-commits.github.io/saranworks-demo/
+- 公開URL: https://demo.saran-cloud.com/
 - 中身は `index.html` 1枚だけ（他のファイルに依存しない）
 
 ## 直し方

@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>棚卸しノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<style>
+:root{
+  color-scheme: light;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg:#fcfaff;--card:#ffffff;--tint:#f0ecff;--tint-2:#e4dcfa;
+  --line:#ddd5ef;--line-2:#d7d0e8;
+  --ink:#2f2844;--ink-2:#70677f;--ink-3:#aaa0c3;
+  --primary:#5b4b8a;--primary-2:#695895;--violet:#9c82f5;--on-primary:#ffffff;
+  --warn:#b4451a;--warn-soft:#fbeade;--ok:#1a7a4a;--ok-soft:#e2f3e9;
+  --shadow:0 18px 50px #5b4b8a1a;
+  --f:'Geist','Noto Sans JP','Hiragino Sans','Yu Gothic',system-ui,sans-serif;
+  --r:18px;--r2:11px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#141020;--card:#1c1730;--tint:#241d3c;--tint-2:#2b2347;
+    --line:#312950;--line-2:#3a3160;
+    --ink:#ece8f7;--ink-2:#b0a7c9;--ink-3:#8478a5;
+    --primary:#b49cff;--primary-2:#c8b8ff;--on-primary:#1b1430;
+    --warn:#ff9f72;--warn-soft:#37231a;--ok:#6ee7a0;--ok-soft:#162c22;
+    --shadow:0 18px 50px #00000055;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#141020;--card:#1c1730;--tint:#241d3c;--tint-2:#2b2347;
+  --line:#312950;--line-2:#3a3160;
+  --ink:#ece8f7;--ink-2:#b0a7c9;--ink-3:#8478a5;
+  --primary:#b49cff;--primary-2:#c8b8ff;--on-primary:#1b1430;
+  --warn:#ff9f72;--warn-soft:#37231a;--ok:#6ee7a0;--ok-soft:#162c22;
+  --shadow:0 18px 50px #00000055;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f);font-size:16px;line-height:1.75;
+  padding-inline:16px;padding-block:0 60px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+h1,h2{margin:0;font-weight:700;line-height:1.4}
+p{margin:0}
+
+header.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;margin-inline:-16px;
+  padding:12px 16px 0;background:var(--bg);border-bottom:1px solid var(--line)}
+.title{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.title b{font-size:18px;font-weight:700}
+.title span{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+nav.tabs{display:flex;gap:4px}
+nav.tabs button{flex:1;font-family:var(--f);font-size:13.5px;font-weight:600;cursor:pointer;
+  background:transparent;border:0;border-bottom:2px solid transparent;color:var(--ink-2);padding:10px 6px}
+nav.tabs button[aria-selected="true"]{color:var(--primary);border-bottom-color:var(--primary)}
+
+.card{background:var(--card);border-radius:var(--r);padding:18px 16px;display:flex;flex-direction:column;gap:14px;box-shadow:var(--shadow)}
+.card h2{font-size:17px}
+.muted{color:var(--ink-2);font-size:13.5px}
+.note{color:var(--ink-3);font-size:12.5px;line-height:1.7}
+
+.btn{font-family:var(--f);font-weight:600;font-size:14.5px;cursor:pointer;border:0;border-radius:999px;
+  padding:12px 22px;background:var(--primary);color:var(--on-primary)}
+.btn:hover{background:var(--primary-2)}
+.btn.sm{font-size:13px;padding:9px 16px}
+.btn.ghost{background:transparent;color:var(--ink-2);border:1px solid var(--line-2)}
+.btn.ghost:hover{color:var(--primary);border-color:var(--primary)}
+.btn.danger{background:transparent;color:var(--warn);border:1px solid var(--warn)}
+.btns{display:flex;gap:9px;flex-wrap:wrap}
+:focus-visible{outline:2px solid var(--violet);outline-offset:2px}
+
+input,select,textarea{font-family:var(--f);font-size:16px;color:var(--ink);background:var(--bg);
+  border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
+input:focus,textarea:focus{border-color:var(--primary);outline:none}
+input[type="number"]{font-variant-numeric:tabular-nums}
+label.fld{display:flex;flex-direction:column;gap:5px;font-size:12.5px;font-weight:600;color:var(--ink-2)}
+
+/* 棚卸し */
+.item{background:var(--tint);border-radius:var(--r2);padding:14px;display:flex;flex-direction:column;gap:11px}
+.item .nm{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:15px;font-weight:700}
+.item .nums{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;align-items:end}
+.cell{display:flex;flex-direction:column;gap:4px;min-width:0}
+.cell small{font-size:11px;font-weight:600;color:var(--ink-3)}
+.cell .fixed{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
+.cell input{background:var(--card);padding:9px 10px;font-size:17px;font-weight:500}
+.diff{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
+.diff.bad{color:var(--warn)}.diff.good{color:var(--ok)}
+.chip{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.chip.warn{background:var(--warn-soft);color:var(--warn)}
+.chip.ok{background:var(--ok-soft);color:var(--ok)}
+.chip.hold{background:var(--tint-2);color:var(--ink-2)}
+
+.slip{background:var(--tint);border-radius:var(--r2);padding:14px}
+.row{display:flex;justify-content:space-between;gap:12px;align-items:baseline;padding:7px 0;font-size:13.5px}
+.row+.row{border-top:1px solid var(--line)}
+.row .lbl{color:var(--ink-2)}
+.row .val{font-weight:600;font-variant-numeric:tabular-nums;text-align:right}
+.row.total{border-top:1px solid var(--line-2);margin-top:5px;padding-top:12px}
+.row.total .lbl{font-weight:700;color:var(--ink);font-size:14.5px}
+.row.total .val{color:var(--primary);font-size:16px;font-weight:700}
+
+/* 品目 */
+.edit{background:var(--tint);border-radius:var(--r2);padding:14px;display:flex;flex-direction:column;gap:11px}
+.edit .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.edit .grid.full{grid-template-columns:1fr}
+@media (min-width:560px){.edit .grid{grid-template-columns:repeat(4,1fr)}}
+.empty{color:var(--ink-3);font-size:14px;text-align:center;padding:24px 10px}
+
+/* 読み取り */
+.modes{display:flex;gap:8px;flex-wrap:wrap}
+.reader{width:100%;border-radius:var(--r2);overflow:hidden;background:var(--tint);min-height:0}
+.reader video,.reader canvas,.reader img{width:100% !important;height:auto !important;display:block}
+.reader:empty{display:none}
+.last{background:var(--tint-2);border-radius:var(--r2);padding:13px;display:flex;flex-direction:column;gap:10px}
+.last .nm{font-size:15px;font-weight:700}
+
+/* 履歴 */
+ul.hist{list-style:none;margin:0;padding:0}
+ul.hist li{display:flex;justify-content:space-between;gap:12px;align-items:baseline;
+  padding:11px 0;border-bottom:1px solid var(--line);font-size:14px}
+ul.hist li:last-child{border-bottom:0}
+ul.hist .when{font-weight:600}
+ul.hist .what{font-size:12px;color:var(--ink-3)}
+ul.hist .v{font-variant-numeric:tabular-nums;font-weight:600;color:var(--primary);white-space:nowrap}
+
+/* 次の段階 */
+.next{background:var(--primary);color:var(--on-primary);border-radius:var(--r);padding:22px 18px;
+  display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow)}
+.next h2{color:var(--on-primary);font-size:17px}
+.next ul{margin:0;padding-left:1.1em;font-size:14px;opacity:.92}
+.next li{margin-bottom:4px}
+.next a{display:inline-flex;align-items:center;text-decoration:none;background:var(--card);color:var(--primary);
+  font-weight:600;font-size:14px;padding:10px 20px;border-radius:999px;align-self:flex-start}
+
+footer{text-align:center;color:var(--ink-3);font-size:12px;line-height:1.8}
+.hidden{display:none !important}
+
+/* 印刷：発注リストだけを出す */
+#print{display:none}
+@media print{
+  body{background:#fff;color:#000;padding:0}
+  .wrap > *:not(#print){display:none !important}
+  #print{display:block;font-size:13px}
+  #print h2{font-size:17px;margin-bottom:4px}
+  #print table{width:100%;border-collapse:collapse;margin-top:12px}
+  #print th,#print td{border:1px solid #999;padding:7px 9px;text-align:left}
+  #print th{background:#eee}
+  #print .sign{margin-top:28px;font-size:12px}
+}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="bar">
+    <div class="title">
+      <b>棚卸しノート</b>
+      <span id="saved-at">保存先：この端末</span>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button type="button" id="t-count" role="tab" aria-selected="true">棚卸し</button>
+      <button type="button" id="t-scan"  role="tab" aria-selected="false">読み取り</button>
+      <button type="button" id="t-items" role="tab" aria-selected="false">品目</button>
+      <button type="button" id="t-hist"  role="tab" aria-selected="false">履歴</button>
+    </nav>
+  </header>
+
+  <!-- 棚卸し -->
+  <section id="p-count" class="card">
+    <h2>数えた数を入れる</h2>
+    <p class="muted" id="count-lead"></p>
+    <div id="stock" style="display:flex;flex-direction:column;gap:11px"></div>
+    <div class="slip" id="slip"></div>
+    <div class="btns">
+      <button type="button" class="btn" id="fix">この数で台帳を合わせる</button>
+      <button type="button" class="btn ghost sm" id="reset-count">数えた数を戻す</button>
+      <button type="button" class="btn ghost sm" id="print-btn">発注リストを印刷</button>
+    </div>
+    <p class="note">「台帳を合わせる」を押すと、台帳の数が数えた数に置き換わり、履歴に残ります。</p>
+  </section>
+
+  <!-- 読み取り -->
+  <section id="p-scan" class="card hidden">
+    <h2>バーコードで読み取る</h2>
+    <p class="muted">読むたびに数が1つ増えます。確定ボタンは押しません。手を止めずに続けてください。</p>
+
+    <div class="modes" role="group" aria-label="読み取りの種類">
+      <button type="button" id="m-sum" class="btn sm" aria-pressed="true">同じ商品は同じコード</button>
+      <button type="button" id="m-one" class="btn ghost sm" aria-pressed="false">1個ずつ違うコード</button>
+    </div>
+    <p class="note" id="mode-note"></p>
+
+    <div id="reader" class="reader"></div>
+    <div class="btns">
+      <button type="button" class="btn" id="scan-start">カメラを始める</button>
+      <button type="button" class="btn ghost sm hidden" id="scan-stop">止める</button>
+    </div>
+    <p class="note" id="scan-msg"></p>
+
+    <div class="last hidden" id="last">
+      <div class="nm" id="last-name"></div>
+      <div class="btns">
+        <button type="button" class="btn ghost sm" data-add="5">まとめて +5</button>
+        <button type="button" class="btn ghost sm" data-add="10">+10</button>
+        <button type="button" class="btn ghost sm" data-add="-1">1つ戻す</button>
+        <button type="button" class="btn ghost sm" id="add-n">数を入れる</button>
+      </div>
+    </div>
+
+    <div class="slip" id="scan-sum"></div>
+    <p class="note">コードは「品目」の画面で1つずつ登録できます。未登録のコードを読むと、その場で登録できます。</p>
+  </section>
+
+  <!-- 品目 -->
+  <section id="p-items" class="card hidden">
+    <h2>品目</h2>
+    <p class="muted">扱っているものを登録します。単位も発注点も、普段お使いの言い方のままで構いません。</p>
+    <div id="items"></div>
+    <div class="btns">
+      <button type="button" class="btn sm" id="add">品目を追加</button>
+      <button type="button" class="btn ghost sm" id="csv-out">CSVに書き出す</button>
+      <button type="button" class="btn ghost sm" id="csv-in-btn">CSVから読み込む</button>
+      <input type="file" id="csv-in" accept=".csv,text/csv" class="hidden">
+    </div>
+    <p class="note">CSVの並び：名前, 単位, 台帳の数, 開封済み, 受注済み・未出庫, 発注点<br>
+      エクセルで作った表をCSVで保存すれば、そのまま読み込めます。読み込むと、今の品目は置き換わります。</p>
+  </section>
+
+  <!-- 履歴 -->
+  <section id="p-hist" class="card hidden">
+    <h2>履歴</h2>
+    <p class="muted">この端末に残っている棚卸しの記録です。新しい順に20件まで。</p>
+    <ul class="hist" id="hist"></ul>
+    <div class="btns">
+      <button type="button" class="btn ghost sm" id="hist-csv">履歴をCSVに書き出す</button>
+      <button type="button" class="btn danger sm" id="hist-clear">履歴を消す</button>
+    </div>
+  </section>
+
+  <!-- 印刷用 -->
+  <div id="print"></div>
+
+  <section class="next">
+    <h2>ここから先</h2>
+    <p style="font-size:14px;opacity:.92">このノートは、1人・1台で使うところまでです。次のことがしたくなったら、仕組みの出番です。</p>
+    <ul>
+      <li>事務所と倉庫で、同じ数字を同時に見る</li>
+      <li>誰がいつ数えたかを残す</li>
+      <li>kintone やスプレッドシートと自動でつなぐ</li>
+      <li>受注が入ったら、取り置き分が自動で引かれる</li>
+    </ul>
+    <a href="mailto:mmbsaran358@gmail.com">saran に聞いてみる</a>
+  </section>
+
+  <footer>
+    <p>棚卸しノート ／ saran（長野県大町市）<br>
+      数字はこの端末の中だけに保存されます。どこにも送られません。</p>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  var KEY_I = 'saran-tanaoroshi-items-v1';
+  var KEY_H = 'saran-tanaoroshi-hist-v1';
+
+  var SAMPLE = [
+    { name:'ナラ 薪', unit:'袋', ledger:128, opened:3, held:12, reorder:40, code:'4901234567894' },
+    { name:'カラマツ 薪', unit:'袋', ledger:64, opened:1, held:20, reorder:30, code:'4901234567900' },
+    { name:'焚付け', unit:'束', ledger:45, opened:0, held:5, reorder:20, code:'' }
+  ];
+
+  function load(key, fallback){
+    try {
+      var raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : fallback;
+    } catch (e) { return fallback; }
+  }
+  function save(key, value){
+    try { localStorage.setItem(key, JSON.stringify(value)); return true; }
+    catch (e) { return false; }   // 保存できなくても画面は動かす
+  }
+
+  var items = load(KEY_I, null);
+  var usingSample = false;
+  if (!items || !items.length){ items = SAMPLE.map(function(x){ return Object.assign({}, x); }); usingSample = true; }
+  var hist = load(KEY_H, []) || [];
+  var counted = items.map(function(i){ return i.ledger; });
+
+  function n(v){ return Number(v) || 0; }
+  function fmt(v){ return Number(v).toLocaleString('ja-JP'); }
+
+  /* ---------- タブ ---------- */
+  var tabs = [['t-count','p-count'],['t-scan','p-scan'],['t-items','p-items'],['t-hist','p-hist']];
+  tabs.forEach(function(pair){
+    document.getElementById(pair[0]).addEventListener('click', function(){
+      tabs.forEach(function(p){
+        var on = p[0] === pair[0];
+        document.getElementById(p[0]).setAttribute('aria-selected', on ? 'true' : 'false');
+        document.getElementById(p[1]).classList.toggle('hidden', !on);
+      });
+      if (pair[0] !== 't-scan') stopScan();   // 別の画面に移ったらカメラを切る
+      if (pair[0] === 't-scan') scanSummary();
+      if (pair[0] === 't-items') drawItems();
+      if (pair[0] === 't-hist') drawHist();
+    });
+  });
+
+  /* ---------- 棚卸し ---------- */
+  function drawCount(){
+    document.getElementById('count-lead').textContent = usingSample
+      ? '最初は例として薪の品目が入っています。「品目」から、ご自身のものに入れ替えてください。'
+      : '倉庫で数えた数を、そのまま入れてください。ズレと発注の要否がすぐ出ます。';
+
+    var box = document.getElementById('stock');
+    box.innerHTML = '';
+    if (!items.length){ box.innerHTML = '<p class="empty">品目がありません。「品目」から追加してください。</p>'; summary(); return; }
+
+    items.forEach(function(it, i){
+      var el = document.createElement('div'); el.className = 'item';
+      var nm = document.createElement('div'); nm.className = 'nm';
+      nm.appendChild(document.createTextNode(it.name));
+      if (n(it.opened) > 0){
+        var c1 = document.createElement('span'); c1.className = 'chip hold';
+        c1.textContent = '開封済み ' + fmt(it.opened) + it.unit + ' から先に出す';
+        nm.appendChild(c1);
+      }
+      var c2 = document.createElement('span'); c2.className = 'chip'; c2.id = 'chip-' + i;
+      nm.appendChild(c2);
+      el.appendChild(nm);
+
+      var nums = document.createElement('div'); nums.className = 'nums';
+      var a = document.createElement('div'); a.className = 'cell';
+      a.innerHTML = '<small>台帳の数</small><span class="fixed">' + fmt(it.ledger) + '</span>';
+      nums.appendChild(a);
+
+      var b = document.createElement('div'); b.className = 'cell';
+      var lab = document.createElement('small'); lab.textContent = '数えた数';
+      var inp = document.createElement('input');
+      inp.type = 'number'; inp.min = '0'; inp.step = '1'; inp.inputMode = 'numeric';
+      inp.value = counted[i]; inp.id = 'cnt-' + i;
+      inp.setAttribute('aria-label', it.name + ' 数えた数');
+      inp.addEventListener('input', function(){ counted[i] = Math.max(0, n(this.value)); refresh(); summary(); });
+      b.appendChild(lab); b.appendChild(inp);
+      nums.appendChild(b);
+
+      var c = document.createElement('div'); c.className = 'cell';
+      c.innerHTML = '<small>ズレ</small><span class="diff" id="df-' + i + '"></span>';
+      nums.appendChild(c);
+
+      el.appendChild(nums);
+      box.appendChild(el);
+    });
+    refresh();
+    summary();
+  }
+
+  function refresh(){
+    items.forEach(function(it, i){
+      var diff = counted[i] - n(it.ledger);
+      var d = document.getElementById('df-' + i);
+      if (d){ d.textContent = (diff > 0 ? '+' : '') + fmt(diff); d.className = 'diff ' + (diff === 0 ? 'good' : 'bad'); }
+      var chip = document.getElementById('chip-' + i);
+      if (chip){
+        var avail = counted[i] - n(it.held);
+        var low = avail < n(it.reorder);
+        chip.className = 'chip ' + (low ? 'warn' : 'ok');
+        chip.textContent = low ? '発注が必要（残り ' + fmt(avail) + it.unit + '）' : '在庫は足りています';
+      }
+    });
+  }
+
+  function shortList(){
+    return items.filter(function(it, i){ return counted[i] - n(it.held) < n(it.reorder); });
+  }
+
+  function summary(){
+    var gap = 0, held = 0;
+    items.forEach(function(it, i){ gap += Math.abs(counted[i] - n(it.ledger)); held += n(it.held); });
+    var short = shortList();
+    var html = '';
+    html += '<div class="row"><span class="lbl">台帳と合わなかった数</span><span class="val">' + fmt(gap) + ' 点</span></div>';
+    html += '<div class="row"><span class="lbl">受注済み・未出庫</span><span class="val">' + fmt(held) + ' 点</span></div>';
+    html += '<div class="row total"><span class="lbl">発注が必要</span><span class="val">' +
+            (short.length ? short.map(function(x){ return x.name; }).join('・') : 'なし') + '</span></div>';
+    document.getElementById('slip').innerHTML = html;
+  }
+
+  document.getElementById('fix').addEventListener('click', function(){
+    if (!items.length) return;
+    var rows = items.map(function(it, i){
+      return { name: it.name, unit: it.unit, ledger: n(it.ledger), counted: counted[i], diff: counted[i] - n(it.ledger) };
+    });
+    var gap = rows.reduce(function(s, r){ return s + Math.abs(r.diff); }, 0);
+    hist.unshift({ at: new Date().toISOString(), gap: gap, count: rows.length, rows: rows });
+    hist = hist.slice(0, 20);
+    items.forEach(function(it, i){ it.ledger = counted[i]; });
+    usingSample = false;
+    var ok = save(KEY_I, items) && save(KEY_H, hist);
+    drawCount();
+    var b = this;
+    b.textContent = ok ? '台帳を合わせました' : '合わせました（保存はできていません）';
+    setTimeout(function(){ b.textContent = 'この数で台帳を合わせる'; }, 1900);
+  });
+
+  document.getElementById('reset-count').addEventListener('click', function(){
+    counted = items.map(function(i){ return n(i.ledger); });
+    drawCount();
+  });
+
+  /* ---------- 印刷（発注リスト） ---------- */
+  document.getElementById('print-btn').addEventListener('click', function(){
+    var short = shortList();
+    var d = new Date();
+    var day = d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日';
+    var html = '<h2>発注リスト</h2><p>' + day + ' 時点</p>';
+    if (!short.length){
+      html += '<p>発注が必要なものはありません。</p>';
+    } else {
+      html += '<table><thead><tr><th>品名</th><th>使える数</th><th>発注点</th><th>発注する数</th></tr></thead><tbody>';
+      short.forEach(function(it){
+        var i = items.indexOf(it);
+        var avail = counted[i] - n(it.held);
+        html += '<tr><td>' + it.name + '</td><td>' + fmt(avail) + ' ' + it.unit + '</td><td>' +
+                fmt(it.reorder) + ' ' + it.unit + '</td><td></td></tr>';
+      });
+      html += '</tbody></table>';
+    }
+    html += '<p class="sign">担当　　　　　　　　　確認　　　　　　　　　</p>';
+    document.getElementById('print').innerHTML = html;
+    window.print();
+  });
+
+  /* ---------- 品目 ---------- */
+  function drawItems(){
+    var box = document.getElementById('items');
+    box.innerHTML = '';
+    if (!items.length){ box.innerHTML = '<p class="empty">品目がありません。「品目を追加」から始めてください。</p>'; return; }
+
+    items.forEach(function(it, i){
+      var el = document.createElement('div'); el.className = 'edit';
+
+      var g1 = document.createElement('div'); g1.className = 'grid full';
+      g1.appendChild(field('名前', 'text', it.name, function(v){ it.name = v; persist(); }));
+      el.appendChild(g1);
+
+      var g = document.createElement('div'); g.className = 'grid';
+      g.appendChild(field('単位', 'text', it.unit, function(v){ it.unit = v; persist(); }));
+      g.appendChild(field('台帳の数', 'number', it.ledger, function(v){ it.ledger = Math.max(0, n(v)); counted[i] = it.ledger; persist(); }));
+      g.appendChild(field('開封済み', 'number', it.opened, function(v){ it.opened = Math.max(0, n(v)); persist(); }));
+      g.appendChild(field('受注済み', 'number', it.held, function(v){ it.held = Math.max(0, n(v)); persist(); }));
+      el.appendChild(g);
+
+      var g2 = document.createElement('div'); g2.className = 'grid';
+      g2.appendChild(field('発注点', 'number', it.reorder, function(v){ it.reorder = Math.max(0, n(v)); persist(); }));
+      g2.appendChild(field('バーコード', 'text', it.code || '', function(v){ it.code = String(v).trim(); persist(); }));
+      el.appendChild(g2);
+
+      var del = document.createElement('button');
+      del.type = 'button'; del.className = 'btn danger sm'; del.textContent = 'この品目を消す';
+      del.style.alignSelf = 'flex-start';
+      del.addEventListener('click', function(){
+        if (!window.confirm('「' + it.name + '」を消します。よろしいですか。')) return;
+        items.splice(i, 1); counted.splice(i, 1); persist(); drawItems(); drawCount();
+      });
+      el.appendChild(del);
+      box.appendChild(el);
+    });
+  }
+
+  function field(label, type, value, onchange){
+    var l = document.createElement('label'); l.className = 'fld';
+    var s = document.createElement('span'); s.textContent = label;
+    var i = document.createElement('input');
+    i.type = type; i.value = value;
+    if (type === 'number'){ i.min = '0'; i.step = '1'; i.inputMode = 'numeric'; }
+    i.addEventListener('input', function(){ onchange(this.value); });
+    l.appendChild(s); l.appendChild(i);
+    return l;
+  }
+
+  function persist(){ usingSample = false; save(KEY_I, items); }
+
+  document.getElementById('add').addEventListener('click', function(){
+    if (usingSample && window.confirm('例の品目が入っています。消してから追加しますか。')){ items = []; counted = []; }
+    items.push({ name:'新しい品目', unit:'個', ledger:0, opened:0, held:0, reorder:0 });
+    counted.push(0);
+    persist(); drawItems(); drawCount();
+  });
+
+  /* ---------- CSV ---------- */
+  // 保存の出し方は置かれた場所で変わる。claude.ai の中では許可を取る仕組みを通し、
+  // 普通のサーバーに置いたときは通常のダウンロードにする。両方で動くようにしておく。
+  var dlReady = (window.claude && typeof window.claude.use === 'function')
+    ? window.claude.use('downloads').catch(function(){ return null; })
+    : Promise.resolve(null);
+
+  function download(name, text){
+    var body = '﻿' + text;
+    dlReady.then(function(dl){
+      if (dl){
+        dl.save({ filename: name, data: body }).catch(function(err){
+          if (err && err.code === 'declined') return;   // 断られたのは失敗ではない
+          window.alert('保存できませんでした。');
+        });
+        return;
+      }
+      var blob = new Blob([body], { type:'text/csv;charset=utf-8' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob); a.download = name;
+      document.body.appendChild(a); a.click();
+      setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+    });
+  }
+  function esc(v){ var s = String(v == null ? '' : v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+
+  document.getElementById('csv-out').addEventListener('click', function(){
+    var lines = ['名前,単位,台帳の数,開封済み,受注済み・未出庫,発注点,バーコード'];
+    items.forEach(function(it){
+      lines.push([it.name, it.unit, n(it.ledger), n(it.opened), n(it.held), n(it.reorder), it.code || ''].map(esc).join(','));
+    });
+    download('品目.csv', lines.join('\r\n'));
+  });
+
+  document.getElementById('csv-in-btn').addEventListener('click', function(){ document.getElementById('csv-in').click(); });
+  document.getElementById('csv-in').addEventListener('change', function(){
+    var f = this.files && this.files[0];
+    if (!f) return;
+    var r = new FileReader();
+    r.onload = function(){
+      try {
+        var text = String(r.result).replace(/^﻿/, '');
+        var rows = text.split(/\r?\n/).filter(function(l){ return l.trim(); });
+        if (rows.length && /名前/.test(rows[0])) rows.shift();   // 見出し行は読み飛ばす
+        var next = [];
+        rows.forEach(function(line){
+          var c = splitCsv(line);
+          if (!c[0]) return;
+          next.push({ name:c[0], unit:c[1] || '個', ledger:n(c[2]), opened:n(c[3]), held:n(c[4]), reorder:n(c[5]), code:(c[6] || '').trim() });
+        });
+        if (!next.length){ window.alert('読み取れる行がありませんでした。並びをご確認ください。'); return; }
+        items = next; counted = items.map(function(i){ return n(i.ledger); });
+        persist(); drawItems(); drawCount();
+        window.alert(next.length + '件を読み込みました。');
+      } catch (e) {
+        window.alert('CSVを読み取れませんでした。');
+      }
+      document.getElementById('csv-in').value = '';
+    };
+    r.readAsText(f);
+  });
+
+  function splitCsv(line){
+    var out = [], cur = '', q = false;
+    for (var i = 0; i < line.length; i++){
+      var ch = line[i];
+      if (q){
+        if (ch === '"' && line[i+1] === '"'){ cur += '"'; i++; }
+        else if (ch === '"'){ q = false; }
+        else cur += ch;
+      } else if (ch === '"'){ q = true; }
+      else if (ch === ','){ out.push(cur.trim()); cur = ''; }
+      else cur += ch;
+    }
+    out.push(cur.trim());
+    return out;
+  }
+
+  /* ---------- 履歴 ---------- */
+  function drawHist(){
+    var ul = document.getElementById('hist');
+    ul.innerHTML = '';
+    if (!hist.length){ ul.innerHTML = '<li><span class="what">まだありません。棚卸しをして「台帳を合わせる」を押すと残ります。</span></li>'; return; }
+    hist.forEach(function(h){
+      var li = document.createElement('li');
+      var left = document.createElement('div');
+      var d = new Date(h.at);
+      var when = document.createElement('div'); when.className = 'when';
+      when.textContent = d.toLocaleString('ja-JP', { year:'numeric', month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit' });
+      var what = document.createElement('div'); what.className = 'what';
+      what.textContent = h.count + '品目';
+      left.appendChild(when); left.appendChild(what);
+      var v = document.createElement('span'); v.className = 'v';
+      v.textContent = h.gap === 0 ? 'ズレなし' : 'ズレ ' + fmt(h.gap) + ' 点';
+      li.appendChild(left); li.appendChild(v);
+      ul.appendChild(li);
+    });
+  }
+
+  document.getElementById('hist-csv').addEventListener('click', function(){
+    if (!hist.length){ window.alert('履歴がありません。'); return; }
+    var lines = ['日時,品名,単位,台帳の数,数えた数,ズレ'];
+    hist.forEach(function(h){
+      var when = new Date(h.at).toLocaleString('ja-JP');
+      h.rows.forEach(function(r){
+        lines.push([when, r.name, r.unit, r.ledger, r.counted, r.diff].map(esc).join(','));
+      });
+    });
+    download('棚卸し履歴.csv', lines.join('\r\n'));
+  });
+
+  document.getElementById('hist-clear').addEventListener('click', function(){
+    if (!window.confirm('履歴をすべて消します。よろしいですか。')) return;
+    hist = [];
+    try { localStorage.removeItem(KEY_H); } catch (e) { /* 消せなくても画面は戻る */ }
+    drawHist();
+  });
+
+  /* ---------- 読み取り ---------- */
+  var SCAN_LIB = 'https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js';
+  var scanner = null, scanMode = 'sum', lastIdx = -1, seen = {}, lastCode = '', lastAt = 0;
+
+  function msg(t){ document.getElementById('scan-msg').textContent = t || ''; }
+
+  function setMode(m){
+    scanMode = m;
+    var sum = m === 'sum';
+    var a = document.getElementById('m-sum'), b = document.getElementById('m-one');
+    a.setAttribute('aria-pressed', sum ? 'true' : 'false');
+    b.setAttribute('aria-pressed', sum ? 'false' : 'true');
+    a.className = 'btn sm' + (sum ? '' : ' ghost');
+    b.className = 'btn sm' + (sum ? ' ghost' : '');
+    document.getElementById('mode-note').textContent = sum
+      ? '同じ商品に同じコードが付いている場合（市販のJANコードなど）。読むたびにその品目が1つ増えます。'
+      : '1個ずつ違うコードが付いている場合（自社で貼った通し番号など）。読んだコードの数を数えます。同じものを二度読むと知らせます。';
+    scanSummary();
+  }
+  document.getElementById('m-sum').addEventListener('click', function(){ setMode('sum'); });
+  document.getElementById('m-one').addEventListener('click', function(){ setMode('one'); });
+
+  function beep(ok){
+    try {
+      var C = window.AudioContext || window.webkitAudioContext;
+      if (!C) return;
+      var ctx = beep.ctx || (beep.ctx = new C());
+      var o = ctx.createOscillator(), g = ctx.createGain();
+      o.frequency.value = ok ? 880 : 300;
+      g.gain.value = 0.07;
+      o.connect(g); g.connect(ctx.destination);
+      o.start(); o.stop(ctx.currentTime + (ok ? 0.07 : 0.22));
+    } catch (e) { /* 音が出せなくても読み取りは続ける */ }
+    if (navigator.vibrate) { try { navigator.vibrate(ok ? 30 : [60, 50, 60]); } catch (e) {} }
+  }
+
+  function loadLib(cb){
+    if (window.Html5Qrcode) return cb(null);
+    var s = document.createElement('script');
+    s.src = SCAN_LIB;
+    s.onload = function(){ cb(null); };
+    s.onerror = function(){ cb(new Error('読み取りの部品を読み込めませんでした。通信をご確認ください。')); };
+    document.head.appendChild(s);
+  }
+
+  function startScan(){
+    msg('カメラを準備しています…');
+    loadLib(function(err){
+      if (err){ msg(err.message); return; }
+      try {
+        scanner = new window.Html5Qrcode('reader', { verbose: false });
+      } catch (e){ msg('読み取りを始められませんでした。'); return; }
+      scanner.start(
+        { facingMode: 'environment' },
+        { fps: 10, qrbox: { width: 280, height: 170 } },
+        onScan,
+        function(){ /* 読めなかったフレームは無視する */ }
+      ).then(function(){
+        msg('コードにかざしてください。読むたびに音が鳴ります。');
+        document.getElementById('scan-start').classList.add('hidden');
+        document.getElementById('scan-stop').classList.remove('hidden');
+      }).catch(function(){
+        scanner = null;
+        msg('カメラを使えませんでした。ブラウザでカメラを許可しているかご確認ください。'
+          + '（claude.ai の画面の中では使えないことがあります。公開されているURLでお試しください）');
+      });
+    });
+  }
+
+  function stopScan(){
+    if (!scanner) return;
+    var s = scanner; scanner = null;
+    try { s.stop().then(function(){ try { s.clear(); } catch (e) {} }).catch(function(){}); } catch (e) {}
+    document.getElementById('scan-start').classList.remove('hidden');
+    document.getElementById('scan-stop').classList.add('hidden');
+    msg('');
+  }
+
+  document.getElementById('scan-start').addEventListener('click', startScan);
+  document.getElementById('scan-stop').addEventListener('click', stopScan);
+
+  function onScan(text){
+    var code = String(text).trim();
+    var now = Date.now();
+    if (code === lastCode && now - lastAt < 1200) return;   // 同じコードの連続読みを防ぐ
+    lastCode = code; lastAt = now;
+
+    if (scanMode === 'one'){
+      if (seen[code]){ seen[code]++; beep(false); showLast('二度読みました：' + code + '（' + seen[code] + '回目）', -1); }
+      else { seen[code] = 1; beep(true); showLast('読みました：' + code, -1); }
+      scanSummary();
+      return;
+    }
+
+    var idx = -1;
+    for (var i = 0; i < items.length; i++){
+      if (items[i].code && String(items[i].code).trim() === code){ idx = i; break; }
+    }
+    if (idx < 0){
+      beep(false);
+      msg('登録されていないコードです：' + code);
+      offerRegister(code);
+      return;
+    }
+    counted[idx] += 1;
+    lastIdx = idx;
+    beep(true);
+    refresh(); summary(); scanSummary();
+    showLast(items[idx].name + '　' + fmt(counted[idx]) + items[idx].unit, idx);
+  }
+
+  function showLast(label, idx){
+    lastIdx = idx;
+    document.getElementById('last').classList.remove('hidden');
+    document.getElementById('last-name').textContent = label;
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll('#last [data-add]'), function(b){
+    b.addEventListener('click', function(){
+      if (lastIdx < 0) return;
+      var d = Number(this.getAttribute('data-add'));
+      counted[lastIdx] = Math.max(0, counted[lastIdx] + d);
+      refresh(); summary(); scanSummary();
+      showLast(items[lastIdx].name + '　' + fmt(counted[lastIdx]) + items[lastIdx].unit, lastIdx);
+    });
+  });
+
+  document.getElementById('add-n').addEventListener('click', function(){
+    if (lastIdx < 0) return;
+    var v = window.prompt('この品目に足す数を入れてください', '10');
+    if (v === null) return;
+    counted[lastIdx] = Math.max(0, counted[lastIdx] + n(v));
+    refresh(); summary(); scanSummary();
+    showLast(items[lastIdx].name + '　' + fmt(counted[lastIdx]) + items[lastIdx].unit, lastIdx);
+  });
+
+  function offerRegister(code){
+    if (!window.confirm('登録されていないコードです。\n' + code + '\n\nどの品目のものか選びますか。')) return;
+    var list = items.map(function(it, i){ return (i + 1) + '. ' + it.name; }).join('\n');
+    var v = window.prompt('番号を入れてください。新しい品目にするなら 0。\n\n0. 新しい品目として登録\n' + list, '0');
+    if (v === null) return;
+    var k = n(v);
+    if (k === 0){
+      var nm = window.prompt('品目の名前を入れてください', '新しい品目');
+      if (!nm) return;
+      items.push({ name:nm, unit:'個', ledger:0, opened:0, held:0, reorder:0, code:code });
+      counted.push(1);
+      lastIdx = items.length - 1;
+    } else if (k >= 1 && k <= items.length){
+      items[k - 1].code = code;
+      counted[k - 1] += 1;
+      lastIdx = k - 1;
+    } else return;
+    persist(); drawCount(); scanSummary();
+    showLast(items[lastIdx].name + '　' + fmt(counted[lastIdx]) + items[lastIdx].unit, lastIdx);
+    msg('');
+  }
+
+  function scanSummary(){
+    var box = document.getElementById('scan-sum');
+    if (!box) return;
+    var html = '';
+    if (scanMode === 'one'){
+      var kinds = Object.keys(seen).length;
+      var total = Object.keys(seen).reduce(function(s, k){ return s + seen[k]; }, 0);
+      html += '<div class="row"><span class="lbl">読んだ数</span><span class="val">' + fmt(kinds) + ' 点</span></div>';
+      html += '<div class="row"><span class="lbl">二度読み</span><span class="val">' + fmt(total - kinds) + ' 回</span></div>';
+      html += '<div class="row total"><span class="lbl">台帳の合計</span><span class="val">' +
+              fmt(items.reduce(function(s, it){ return s + n(it.ledger); }, 0)) + ' 点</span></div>';
+    } else {
+      var done = 0, withCode = 0;
+      items.forEach(function(it, i){ if (it.code){ withCode++; if (counted[i] !== n(it.ledger)) done++; } });
+      var sum = counted.reduce(function(s, v){ return s + v; }, 0);
+      html += '<div class="row"><span class="lbl">数えた合計</span><span class="val">' + fmt(sum) + ' 点</span></div>';
+      html += '<div class="row"><span class="lbl">コード付きの品目</span><span class="val">' + fmt(withCode) + ' / ' + fmt(items.length) + '</span></div>';
+      html += '<div class="row total"><span class="lbl">台帳の合計</span><span class="val">' +
+              fmt(items.reduce(function(s, it){ return s + n(it.ledger); }, 0)) + ' 点</span></div>';
+    }
+    box.innerHTML = html;
+  }
+
+  setMode('sum');
+  window.addEventListener('pagehide', stopScan);
+
+  /* ---------- 保存できるかの確認 ---------- */
+  (function(){
+    var ok = save('saran-tanaoroshi-test', 1);
+    try { localStorage.removeItem('saran-tanaoroshi-test'); } catch (e) { /* 消せなくてもよい */ }
+    if (!ok) document.getElementById('saved-at').textContent = 'この端末では保存できません（閉じると消えます）';
+  })();
+
+  drawCount();
+})();
+</script>
+</body>
+</html>
